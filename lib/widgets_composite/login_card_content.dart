@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:telehealth/screens/patient/patient_home.dart';
+import 'package:telehealth/widgets_basic/labeled_radio.dart';
+import '../enums.dart';
 import '../widgets_basic/custom_text_field.dart';
 import '../widgets_basic/material_text_button.dart';
 
@@ -14,6 +17,7 @@ class LoginCardContent extends StatefulWidget {
 class _LoginCardContentState extends State<LoginCardContent> {
 
   final VoidCallback onSignupButtonPress;
+  UserType _userType=UserType.patient;
 
   _LoginCardContentState(this.onSignupButtonPress);
 
@@ -66,15 +70,51 @@ class _LoginCardContentState extends State<LoginCardContent> {
                 buttonName: "Login",
                 child: _loggingIn?const CircularProgressIndicator():null,
                 onPressed: (){
-                  setState(() {
-                    _loggingIn=!_loggingIn;
-                  });
+                  // setState(() {
+                  //   _loggingIn=!_loggingIn;
+                  // });
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientHome()));
                 },
               ),
             ],
           ),
           const SizedBox(
             height: 8,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              LabelRadioButton(
+                label: "Patient",
+                representedValue: UserType.patient,
+                currentValue: _userType,
+                onChanged: (value){
+                  setState(() {
+                    _userType=value;
+                  });
+                },
+              ),
+              LabelRadioButton(
+                label: "Doctor",
+                representedValue: UserType.doctor,
+                currentValue: _userType,
+                onChanged: (value){
+                  setState(() {
+                    _userType=value;
+                  });
+                },
+              ),
+              LabelRadioButton(
+                label: "Admin",
+                representedValue: UserType.admin,
+                currentValue: _userType,
+                onChanged: (value){
+                  setState(() {
+                    _userType=value;
+                  });
+                },
+              ),
+            ],
           ),
           TextButton(
             child: const Text("Don't have an account? Sign Up"),
