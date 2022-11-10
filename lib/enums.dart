@@ -1,0 +1,4 @@
+enum LoginCardPage{
+  login,
+  signup,
+}
