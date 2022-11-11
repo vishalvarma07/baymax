@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:telehealth/screens/patient/upcoming_appointments.dart';
+import 'package:telehealth/screens/patient/patient_dashboard.dart';
+import 'package:telehealth/screens/patient/patient_payments.dart';
 
 import '../../enums.dart';
 
@@ -18,7 +19,14 @@ class _PatientHomeState extends State<PatientHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home"),
+        title: Builder(
+          builder: (context){
+            if(_patientScreen==PatientScreen.payments){
+              return const Text("Payments");
+            }
+            return const Text("Dashboard");
+          },
+        ),
       ),
       drawer: Drawer(
         child: Column(
@@ -29,14 +37,24 @@ class _PatientHomeState extends State<PatientHome> {
                   leading: const Icon(Icons.home),
                   title: const Text("Home"),
                   onTap: (){
-
+                    if(_patientScreen!=PatientScreen.home){
+                      setState(() {
+                        _patientScreen=PatientScreen.home;
+                      });
+                    }
+                    Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.timelapse),
-                  title: const Text("Upcoming Appointments"),
+                  leading: const Icon(Icons.money),
+                  title: const Text("Payments"),
                   onTap: (){
-
+                    if(_patientScreen!=PatientScreen.payments){
+                      setState(() {
+                        _patientScreen=PatientScreen.payments;
+                      });
+                    }
+                    Navigator.pop(context);
                   },
                 ),
               ],
@@ -47,9 +65,15 @@ class _PatientHomeState extends State<PatientHome> {
       body: Builder(
         builder: (context){
           if(_patientScreen==PatientScreen.home){
-            return Column();
+            return PatientDashboard(
+              changeScreen: (value){
+                setState(() {
+                  _patientScreen=value;
+                });
+              },
+            );
           }
-          return const UpcomingAppointments();
+          return const PatientPayments();
         },
       ),
     );

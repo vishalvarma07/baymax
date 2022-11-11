@@ -11,5 +11,5 @@ enum UserType{
 
 enum PatientScreen{
   home,
-  upcomingAppointments,
+  payments,
 }
