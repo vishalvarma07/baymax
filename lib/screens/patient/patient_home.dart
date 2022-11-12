@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:telehealth/screens/patient/patient_dashboard.dart';
 import 'package:telehealth/screens/patient/patient_payments.dart';
+import 'package:telehealth/screens/patient/patient_reserve_apppointment.dart';
 
 import '../../enums.dart';
 
@@ -15,6 +17,14 @@ class _PatientHomeState extends State<PatientHome> {
 
   PatientScreen _patientScreen=PatientScreen.home;
 
+  late BuildContext _screenContext;
+
+  @override
+  void initState() {
+    _screenContext=context;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +33,8 @@ class _PatientHomeState extends State<PatientHome> {
           builder: (context){
             if(_patientScreen==PatientScreen.payments){
               return const Text("Payments");
+            }else if(_patientScreen==PatientScreen.reserveAppointment){
+              return const Text("Reserve Appointment");
             }
             return const Text("Dashboard");
           },
@@ -46,6 +58,18 @@ class _PatientHomeState extends State<PatientHome> {
                   },
                 ),
                 ListTile(
+                  leading: const Icon(FontAwesomeIcons.businessTime),
+                  title: const Text("Reserve Appointment"),
+                  onTap: (){
+                    if(_patientScreen!=PatientScreen.reserveAppointment){
+                      setState(() {
+                        _patientScreen=PatientScreen.reserveAppointment;
+                      });
+                    }
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
                   leading: const Icon(Icons.money),
                   title: const Text("Payments"),
                   onTap: (){
@@ -57,6 +81,15 @@ class _PatientHomeState extends State<PatientHome> {
                     Navigator.pop(context);
                   },
                 ),
+                // const Spacer(),
+                ListTile(
+                  leading: const Icon(Icons.logout),
+                  title: const Text("Logout"),
+                  onTap:(){
+                    Navigator.pop(context);
+                    Navigator.pop(_screenContext);
+                  }
+                )
               ],
             )
           ],
@@ -72,6 +105,8 @@ class _PatientHomeState extends State<PatientHome> {
                 });
               },
             );
+          }else if(_patientScreen==PatientScreen.reserveAppointment){
+            return PatientReserveAppointment();
           }
           return const PatientPayments();
         },
