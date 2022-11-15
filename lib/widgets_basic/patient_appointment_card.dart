@@ -49,7 +49,7 @@ class PatientAppointmentCard extends StatelessWidget {
               height: 10,
             ),
             MaterialTextButton(
-              buttonName: "More Info",
+              buttonName: "Manage Reservation",
               onPressed: (){
                 showDialog(
                   context: context,
@@ -61,7 +61,13 @@ class PatientAppointmentCard extends StatelessWidget {
                         onPressed: (){
                           Navigator.pop(context);
                         },
-                        child: const Text("OK"),
+                        child: const Text("Cancel Appointment"),
+                      ),
+                      TextButton(
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Close"),
                       ),
                     ],
                   ),

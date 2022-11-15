@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:telehealth/screens/patient/patient_dashboard.dart';
 import 'package:telehealth/screens/patient/patient_payments.dart';
 import 'package:telehealth/screens/patient/patient_reserve_apppointment.dart';
 
+import '../../const.dart';
 import '../../enums.dart';
 
 class PatientHome extends StatefulWidget {
@@ -23,6 +28,37 @@ class _PatientHomeState extends State<PatientHome> {
   void initState() {
     _screenContext=context;
     super.initState();
+    checkAppointmentComplete();
+  }
+
+  void checkAppointmentComplete(){
+    Timer(Duration(seconds: 1),(){
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context)=>AlertDialog(
+          title: Text("Rate your appointment with Dr.XYZ"),
+          content: RatingBar(
+            ratingWidget: RatingWidget(
+              empty: const Icon(Icons.star_border_outlined,color: backgroundColor,),
+              half: const Icon(Icons.star_half,color: backgroundColor,),
+              full: const Icon(Icons.star,color: backgroundColor,),
+            ),
+            onRatingUpdate: (value){
+
+            },
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Submit"),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   @override
@@ -45,6 +81,14 @@ class _PatientHomeState extends State<PatientHome> {
           children: [
             Column(
               children: [
+                Text("Baymax",style: GoogleFonts.pacifico(
+                    fontSize: 52,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.surfaceTint
+                ),),
+                const SizedBox(
+                  height: 25,
+                ),
                 ListTile(
                   leading: const Icon(Icons.home),
                   title: const Text("Home"),
