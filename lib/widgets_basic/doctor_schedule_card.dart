@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:telehealth/const.dart';
 
 class DoctorScheduleCard extends StatelessWidget {
@@ -53,6 +54,7 @@ class DoctorScheduleCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                           elevation: 4,
+                          deleteIcon: Icon(Icons.timelapse,color: backgroundColor,),
                           backgroundColor: Colors.transparent,
                           onDeleted: (){
 
