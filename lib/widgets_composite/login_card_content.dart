@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:telehealth/screens/doctor/doctor_home.dart';
 import 'package:telehealth/screens/patient/patient_home.dart';
 import 'package:telehealth/widgets_basic/labeled_radio.dart';
 import '../enums.dart';
@@ -73,7 +74,11 @@ class _LoginCardContentState extends State<LoginCardContent> {
                   // setState(() {
                   //   _loggingIn=!_loggingIn;
                   // });
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientHome()));
+                  if(_userType==UserType.patient){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientHome()));
+                  }else if(_userType==UserType.doctor){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorHome()));
+                  }
                 },
               ),
             ],

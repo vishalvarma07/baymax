@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:telehealth/screens/patient/patient_dashboard.dart';
 import 'package:telehealth/screens/patient/patient_payments.dart';
+import 'package:telehealth/screens/patient/patient_profile.dart';
 import 'package:telehealth/screens/patient/patient_reserve_apppointment.dart';
 
 import '../../const.dart';
@@ -71,72 +72,89 @@ class _PatientHomeState extends State<PatientHome> {
               return const Text("Payments");
             }else if(_patientScreen==PatientScreen.reserveAppointment){
               return const Text("Reserve Appointment");
+            }else if(_patientScreen==PatientScreen.profile){
+              return const Text("Profile");
             }
             return const Text("Dashboard");
           },
         ),
       ),
       drawer: Drawer(
-        child: Column(
-          children: [
-            Column(
-              children: [
-                Text("Baymax",style: GoogleFonts.pacifico(
-                    fontSize: 52,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.surfaceTint
-                ),),
-                const SizedBox(
-                  height: 25,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.home),
-                  title: const Text("Home"),
-                  onTap: (){
-                    if(_patientScreen!=PatientScreen.home){
-                      setState(() {
-                        _patientScreen=PatientScreen.home;
-                      });
+        child: SafeArea(
+          child: Column(
+            children: [
+              Column(
+                children: [
+                  Text("Baymax",style: GoogleFonts.pacifico(
+                      fontSize: 52,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.surfaceTint
+                  ),),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    onTap: (){
+                      if(_patientScreen!=PatientScreen.home){
+                        setState(() {
+                          _patientScreen=PatientScreen.home;
+                        });
+                      }
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(FontAwesomeIcons.businessTime),
+                    title: const Text("Reserve Appointment"),
+                    onTap: (){
+                      if(_patientScreen!=PatientScreen.reserveAppointment){
+                        setState(() {
+                          _patientScreen=PatientScreen.reserveAppointment;
+                        });
+                      }
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.money),
+                    title: const Text("Payments"),
+                    onTap: (){
+                      if(_patientScreen!=PatientScreen.payments){
+                        setState(() {
+                          _patientScreen=PatientScreen.payments;
+                        });
+                      }
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.supervised_user_circle),
+                    title: const Text("Profile"),
+                    onTap: (){
+                      if(_patientScreen!=PatientScreen.profile){
+                        setState(() {
+                          _patientScreen=PatientScreen.profile;
+                        });
+                      }
+                      Navigator.pop(context);
+                    },
+                  ),
+
+                  // const Spacer(),
+                  ListTile(
+                    leading: const Icon(Icons.logout),
+                    title: const Text("Logout"),
+                    onTap:(){
+                      Navigator.pop(context);
+                      Navigator.pop(_screenContext);
                     }
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(FontAwesomeIcons.businessTime),
-                  title: const Text("Reserve Appointment"),
-                  onTap: (){
-                    if(_patientScreen!=PatientScreen.reserveAppointment){
-                      setState(() {
-                        _patientScreen=PatientScreen.reserveAppointment;
-                      });
-                    }
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.money),
-                  title: const Text("Payments"),
-                  onTap: (){
-                    if(_patientScreen!=PatientScreen.payments){
-                      setState(() {
-                        _patientScreen=PatientScreen.payments;
-                      });
-                    }
-                    Navigator.pop(context);
-                  },
-                ),
-                // const Spacer(),
-                ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: const Text("Logout"),
-                  onTap:(){
-                    Navigator.pop(context);
-                    Navigator.pop(_screenContext);
-                  }
-                )
-              ],
-            )
-          ],
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
       body: Builder(
@@ -151,6 +169,8 @@ class _PatientHomeState extends State<PatientHome> {
             );
           }else if(_patientScreen==PatientScreen.reserveAppointment){
             return PatientReserveAppointment();
+          }else if(_patientScreen==PatientScreen.profile){
+            return PatientProfile();
           }
           return const PatientPayments();
         },

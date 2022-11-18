@@ -13,4 +13,10 @@ enum PatientScreen{
   home,
   payments,
   reserveAppointment,
+  profile,
+}
+
+enum DoctorScreen{
+  home,
+  profile,
 }

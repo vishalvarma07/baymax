@@ -12,31 +12,38 @@ class CustomTextField extends StatelessWidget {
   final bool enabled;
   final String? hintText;
   final Widget? suffixIcon;
-  const CustomTextField({Key? key,required this.label,this.obscureText=false,this.prefixIcon,this.controller,this.onTap, this.onChanged,this.readOnly=false, this.enabled=true, this.textInputType, this.hintText, this.suffixIcon}) : super(key: key);
+  final bool takeFullWidth;
+  const CustomTextField({Key? key,required this.label,this.obscureText=false,this.prefixIcon,this.controller,this.onTap, this.onChanged,this.readOnly=false, this.enabled=true, this.textInputType, this.hintText, this.suffixIcon, this.takeFullWidth=true}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      onTap: onTap,
-      keyboardType: textInputType,
-      enabled: true,
-      decoration: InputDecoration(
-        hintText: hintText,
-        label: Text(label),
-        filled: true,
-        suffixIcon: suffixIcon,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-        ),
-        prefixIcon: prefixIcon,
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: 50,
+        maxWidth: takeFullWidth?double.infinity:300,
       ),
-      obscureText: obscureText,
-      onChanged: (value){
-        if(onChanged!=null){
-          onChanged!(value);
-        }
-      },
+      child: TextField(
+        controller: controller,
+        onTap: onTap,
+        keyboardType: textInputType,
+        enabled: true,
+        decoration: InputDecoration(
+          hintText: hintText,
+          label: Text(label),
+          filled: true,
+          suffixIcon: suffixIcon,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          prefixIcon: prefixIcon,
+        ),
+        obscureText: obscureText,
+        onChanged: (value){
+          if(onChanged!=null){
+            onChanged!(value);
+          }
+        },
+      ),
     );
   }
 }
