@@ -170,7 +170,7 @@ class _PatientHomeState extends State<PatientHome> {
           }else if(_patientScreen==PatientScreen.reserveAppointment){
             return PatientReserveAppointment();
           }else if(_patientScreen==PatientScreen.profile){
-            return PatientProfile();
+            return PatientProfile(homeScreenContext: _screenContext,);
           }
           return const PatientPayments();
         },

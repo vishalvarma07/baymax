@@ -6,13 +6,18 @@ import '../../widgets_basic/custom_text_field.dart';
 import '../../widgets_basic/page_subheading.dart';
 
 class PatientProfile extends StatefulWidget {
-  const PatientProfile({Key? key}) : super(key: key);
+  final BuildContext homeScreenContext;
+  const PatientProfile({Key? key,required this.homeScreenContext}) : super(key: key);
 
   @override
-  State<PatientProfile> createState() => _PatientProfileState();
+  State<PatientProfile> createState() => _PatientProfileState(homeScreenContext);
 }
 
 class _PatientProfileState extends State<PatientProfile> {
+
+  final BuildContext homeScreenContext;
+
+  _PatientProfileState(this.homeScreenContext);
 
   final TextEditingController _firstName=TextEditingController();
   final TextEditingController _lastName=TextEditingController();
@@ -29,7 +34,9 @@ class _PatientProfileState extends State<PatientProfile> {
   final TextEditingController _pulse=TextEditingController();
   String bloodType="A+";
   String gender="male";
-
+  final TextEditingController _password=TextEditingController();
+  final TextEditingController _newPassword=TextEditingController();
+  final TextEditingController _confirmNewPassword=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +101,64 @@ class _PatientProfileState extends State<PatientProfile> {
 
                 },
                 takeFullWidth: false,
+              ),
+              SizedBox(
+                height: 50,
+                child: MaterialTextButton(
+                  buttonName: "Change Password",
+                  onPressed: (){
+                    showDialog(
+                      context: context,
+                      builder: (context)=>AlertDialog(
+                        title: const Text("Change Password"),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomTextField(
+                              controller: _password,
+                              label: "Old Password",
+                              hintText: "Password",
+                              obscureText: true,
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            CustomTextField(
+                              controller: _newPassword,
+                              label: "New Password",
+                              hintText: "Password",
+                              obscureText: true,
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            CustomTextField(
+                              controller: _confirmNewPassword,
+                              label: "Confirm New Password",
+                              hintText: "Password",
+                              obscureText: true,
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: (){
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: (){
+                              Navigator.pop(context);
+                              Navigator.pop(homeScreenContext);
+                            },
+                            child: const Text("Confirm"),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
