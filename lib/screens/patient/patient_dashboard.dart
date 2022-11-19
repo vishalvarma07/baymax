@@ -3,7 +3,8 @@ import 'package:telehealth/enums.dart';
 import 'package:telehealth/screens/patient/patient_alert_card.dart';
 import 'package:telehealth/widgets_basic/custom_text_button.dart';
 import 'package:telehealth/widgets_basic/page_subheading.dart';
-import 'package:telehealth/widgets_basic/patient_appointment_card.dart';
+import 'package:telehealth/widgets_composite/patient_appointment_card.dart';
+import 'package:telehealth/widgets_basic/welcome_card.dart';
 import 'package:telehealth/widgets_basic/patient_vitals_card.dart';
 
 

@@ -13,18 +13,20 @@ class CustomTextField extends StatelessWidget {
   final String? hintText;
   final Widget? suffixIcon;
   final bool takeFullWidth;
-  const CustomTextField({Key? key,required this.label,this.obscureText=false,this.prefixIcon,this.controller,this.onTap, this.onChanged,this.readOnly=false, this.enabled=true, this.textInputType, this.hintText, this.suffixIcon, this.takeFullWidth=true}) : super(key: key);
+  final bool takeFullHeight;
+  const CustomTextField({Key? key,required this.label,this.obscureText=false,this.prefixIcon,this.controller,this.onTap, this.onChanged,this.readOnly=false, this.enabled=true, this.textInputType, this.hintText, this.suffixIcon, this.takeFullWidth=true, this.takeFullHeight=false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxHeight: 50,
+        maxHeight: takeFullHeight?double.infinity:50,
         maxWidth: takeFullWidth?double.infinity:300,
       ),
       child: TextField(
         controller: controller,
         onTap: onTap,
+        maxLines: takeFullHeight?200:1,
         keyboardType: textInputType,
         enabled: true,
         decoration: InputDecoration(
@@ -37,7 +39,7 @@ class CustomTextField extends StatelessWidget {
           ),
           prefixIcon: prefixIcon,
         ),
-        obscureText: obscureText,
+        obscureText: takeFullHeight?false:obscureText,
         onChanged: (value){
           if(onChanged!=null){
             onChanged!(value);

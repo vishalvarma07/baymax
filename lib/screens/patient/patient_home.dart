@@ -141,7 +141,6 @@ class _PatientHomeState extends State<PatientHome> {
                       Navigator.pop(context);
                     },
                   ),
-
                   // const Spacer(),
                   ListTile(
                     leading: const Icon(Icons.logout),

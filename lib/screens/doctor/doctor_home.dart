@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:telehealth/enums.dart';
+import 'package:telehealth/screens/doctor/doctor_dashboard.dart';
 
 class DoctorHome extends StatefulWidget {
   const DoctorHome({Key? key}) : super(key: key);
@@ -86,7 +87,7 @@ class _DoctorHomeState extends State<DoctorHome> {
       ),
       body: Builder(
         builder: (context){
-          return Container();
+          return DoctorDashboard();
         },
       ),
     );
