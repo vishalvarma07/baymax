@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:telehealth/widgets_basic/custom_text_field.dart';
 import 'package:telehealth/widgets_basic/filled_material_button.dart';
 import 'package:telehealth/widgets_composite/doctor_medicine_tile.dart';
@@ -41,7 +40,7 @@ class DoctorAppointmentCard extends StatelessWidget {
             height: 200,
             child: Row(
               children: [
-                Expanded(
+                const Expanded(
                   child: CustomTextField(
                     label: "Remarks",
                     takeFullHeight: true,
