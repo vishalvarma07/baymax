@@ -92,4 +92,16 @@ router.post('/', credentialCheck, (req, res) => {
     })
 })
 
+router.delete('/', credentialCheck, (req, res) => {
+    let info = req.body;
+    let details = {}
+    pool.query('delete from table reservation where id = ?',[info.appointmentId], function(err) {
+        if(err){
+            console.log(err);
+            details.status = 'failed';
+            res.status(404).json(details);
+        }a
+    })
+})
+
 module.exports = router;
