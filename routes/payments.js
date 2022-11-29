@@ -40,4 +40,18 @@ router.put('/', credentialCheck, (req, res) => {
     })
 })
 
+router.post('/', credentialCheck, (req, res)=>{
+    let medicineDetails = req.body;
+    let details = {}
+    for(let i=0;i<medicineDetails.meds.length;i++){
+        pool.query('insert into medorder (medicineId, paymentId, medOrderedQuantity, medOrderDate) values (?, ?, ?, ?)',[medicineDetails.meds[i].id, medicineDetails.paymentId, medicineDetails.meds[i].quantity, medicineDetails.orderDate], function(err) {
+            if(err){
+                console.log(err);
+                details.status = 'failed';
+                res.status(404).json(details);
+            }
+        })
+    }  
+})
+
 module.exports = router;

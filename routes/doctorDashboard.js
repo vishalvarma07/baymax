@@ -3,7 +3,7 @@ let router = express.Router();
 let pool = require('../resources');
 let app = require('../app');
 const { route } = require('./dashboard');
-const credentialCheck = require('../services/credentialCheck');
+let credentialCheck = require('../services/credentialCheck');
 const getPatientid = require('../services/getPatientid');
 const getDoctorid = require('../services/getDoctorid');
 
@@ -44,52 +44,60 @@ router.get('/', credentialCheck, (req, res) => {
 
 router.post('/', credentialCheck, (req, res) => {
     const info = req.body;
-    const uid = getDoctorid().id;
+    //const uid = getDoctorid().id;
     let details = {}
-    console.log(uid);
-    pool.query('select * from ongoingAppointments where id = ?',[uid], function(err, rows, fields) {
+    //console.log(uid);
+    pool.query('select * from doctor where uname = ?',[req.headers.uname], function(err, rows, fields){
         if(err){
             console.log(err);
             details.status = 'failed';
-            res.status(401).json(details);
+            res.status(404).json(details);
         }
-        if(rows.length != 0){
-            pool.query(`INSERT INTO PAYMENT (doctorId,appointmentId,appointmentDate,consultationFee,slotId,payStatus) VALUES (${rows[0].doctorId}, ${rows[0].appointmentId}, ${rows[0].price}, ${rows[0].slotId}, ${0})`, function(err) {
-                if(err){
-                    console.log(err);
-                    details.status = 'failed';
-                    res.status(401).json(details);
-                }
-                pool.query('delete from reservation where appointmentId = ?',[rows[0].appointmentId], function(err) {
+        pool.query('select * from ongoingAppointments where id = ?',[rows[0].id], function(err, rows, fields) {
+            if(err){
+                console.log(err);
+                details.status = 'failed';
+                res.status(401).json(details);
+            }
+            if(rows.length != 0){
+                pool.query(`INSERT INTO PAYMENT (doctorId,appointmentId,appointmentDate,consultationFee,slotId,payStatus) VALUES (${rows[0].doctorId}, ${rows[0].appointmentId}, ${rows[0].price}, ${rows[0].slotId}, ${0})`, function(err) {
                     if(err){
                         console.log(err);
                         details.status = 'failed';
                         res.status(401).json(details);
                     }
-                    pool.query('select id, appointmentId from payment where doctorId = ? and appointmentId = ?',[rows[0].doctorId, rows[0].appointmentId], function(err, rows, fields){
-                        for(let i=0; i< info.meds.length;i++){
-                            pool.query(`INSERT INTO MEDORDER (medicineId, paymentId, medOrderedQuantity, orderDate) VALUES (${info[i].id},${rows[0].id}, ${info[i].quantity}, ${rows[0].appointmentId})`, function(err){
-                                if(err){
-                                    console.log(err);
-                                    details.status = 'failed';
-                                    res.status(401).json(details);
-                                }
-                                pool.query(`update medicines set mQuantity = mQuantity - ${info[i].quantity} where id = ${info[i].id}`, function(err) {
+                    pool.query('delete from reservation where appointmentId = ?',[rows[0].appointmentId], function(err) {
+                        if(err){
+                            console.log(err);
+                            details.status = 'failed';
+                            res.status(401).json(details);
+                        }
+                        pool.query('select id, appointmentId from payment where doctorId = ? and appointmentId = ?',[rows[0].doctorId, rows[0].appointmentId], function(err, rows, fields){
+                            for(let i=0; i< info.meds.length;i++){
+                                pool.query(`INSERT INTO MEDORDER (medicineId, paymentId, medOrderedQuantity, orderDate) VALUES (${info.meds[i].id},${rows[0].id}, ${info.meds[i].quantity}, ${rows[0].appointmentId})`, function(err){
                                     if(err){
                                         console.log(err);
                                         details.status = 'failed';
                                         res.status(401).json(details);
                                     }
-                                    details.status = 'successful';
-                                    res.status(200).json(details);
+                                    pool.query(`update medicines set mQuantity = mQuantity - ${info.meds[i].quantity} where id = ${info.meds[i].id}`, function(err) {
+                                        if(err){
+                                            console.log(err);
+                                            details.status = 'failed';
+                                            res.status(401).json(details);
+                                        }
+                                        details.status = 'successful';
+                                        res.status(200).json(details);
+                                    })
                                 })
-                            })
-                        }
+                            }
+                        })
                     })
                 })
-            })
-        }
+            }
+        })
     })
+    
 })
 
 router.delete('/', credentialCheck, (req, res) => {
@@ -100,7 +108,7 @@ router.delete('/', credentialCheck, (req, res) => {
             console.log(err);
             details.status = 'failed';
             res.status(404).json(details);
-        }a
+        }
     })
 })
 

@@ -3,13 +3,18 @@ const pool = require('../resources');
 let router = express.Router();
 
 let app = require('../app');
-let credentialsCheck = require('../services/credentialCheck')
+let credentialCheck = require('../services/credentialCheck');
 
-router.get('/',credentialsCheck, (req, res) => {
+router.get('/',credentialCheck, (req, res) => {
     let userDetails = req.headers;
     let upcomingappointments = {};
     console.log(userDetails.uname);
     pool.query('select id from patient where uname = ?',[userDetails.uname], function(err, rows, fields) {
+        if(err){
+            console.log(err);
+            upcomingappointments.status = 'successful';
+            res.status(404).json(upcomingappointments);
+        }
         let uid = rows[0].id;
         pool.query('select * from upcomingappointments where id = ?',[uid], function(err, rows, fields){
             if(err){
@@ -50,6 +55,18 @@ router.get('/',credentialsCheck, (req, res) => {
                 })
             }
         })
+    })
+})
+
+router.delete('/', credentialCheck, (req, res) => {
+    let info = req.body;
+    let details = {}
+    pool.query('delete from table reservation where id = ?',[info.appointmentId], function(err) {
+        if(err){
+            console.log(err);
+            details.status = 'failed';
+            res.status(404).json(details);
+        }
     })
 })
 
