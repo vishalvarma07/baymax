@@ -11,7 +11,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Routers
 loginRouter = require('./routes/login');
 patientDashboardRouter = require('./routes/dashboard');
-doctorLoginRouter = require('./routes/doctorlogin');
 doctorDashboardRouter = require('./routes/doctorDashboard');
 checkMedicineRouter = require('./routes/checkMedicines');
 paymentRouter = require('./routes/payments');
@@ -19,7 +18,6 @@ paymentRouter = require('./routes/payments');
 //Routes
 app.use('/login', loginRouter);
 app.use('/dashboard', patientDashboardRouter);
-app.use('/doctorlogin', doctorLoginRouter);
 app.use('/doctordashboard', doctorDashboardRouter);
 app.use('/checkmedicine', checkMedicineRouter);
 app.use('/payments', paymentRouter);

@@ -7,10 +7,11 @@ let app = require('../app')
 
 router.post('/', (req, res) => {
     const loginDetails = req.headers;
-    const loginType = req.body.loginType;
+    const loginType = req.headers.login_type;
+    const userType = req.headers.user_type;
     let details = {}
-    if(loginType == false){
-        pool.query('select * from patient where uname = ?', [loginDetails.uname], function(error, rows, fields){
+    if(loginType == 'user'){
+        pool.query('select * from ? where uname = ?', [userType, loginDetails.uname], function(error, rows, fields){
             if(error){
                 console.log(err);
                 details.status = 'failed'
@@ -34,7 +35,7 @@ router.post('/', (req, res) => {
         })
     }
     else{
-        pool.query('select * from patient where uname = ?',[loginDetails.uname], function(err, rows, fields){
+        pool.query('select * from ? where uname = ?',[userType, loginDetails.uname], function(err, rows, fields){
             if(err){
                 console.log(err);
                 details.status = 'failed';
