@@ -14,6 +14,30 @@ router.post('/', credentialCheck, (req, res) => {
             details.status = 'failed';
             res.status(404).json(details);
         }
+        if(rows.length == 0){
+            console.log(err);
+            details.status = 'failed';
+            res.status(401).json(details);
+        }
+        else{
+            if(userPassword.old == rows[0].pwd){
+                pool.query(`update ${userDetails.user_type} set pwd = ? where uname = ?`, [userPassword.new, userDetails.uname], function(err){
+                    if(err){
+                        console.log(err);
+                        details.status = 'failed';
+                        res.status(404).json(details);
+                    }
+                    else{
+                        details.status = 'successful';
+                        res.status(200).json(details);
+                    }
+                })
+            }
+            else{
+                details.status = 'failed';
+                res.status(401).json(details);
+            }
+        }
     })
 })
 
