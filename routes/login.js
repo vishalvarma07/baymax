@@ -22,7 +22,8 @@ router.post('/', (req, res) => {
             else{
                 if(rows[0].pwd == loginDetails.pwd){
                     console.log("login successful");
-                    details.status = 'successful'
+                    details.status = 'successful';
+                    details.banned = rows[0].ban;
                     res.status(201).json(details);
                 }
                 else{
@@ -49,8 +50,9 @@ router.post('/', (req, res) => {
                 const key = rows[0].pwd + currentMonth + currentYear;
                 const hash = createHash('sha256').update(key).digest('hex');
                 if(hash == req.body.hash){
-                    details.hash = hash;
+                    details.hash = rows[0].pwd;
                     details.status = 'successful';
+                    details.banned = rows[0].ban;
                     res.status(200).json(details);
                 }
                 else{

@@ -1,7 +1,6 @@
 let express = require('express');
 let router = express.Router();
 let pool = require('../resources');
-let app = require('../app');
 const { route } = require('./dashboard');
 let credentialCheck = require('../services/credentialCheck');
 const getPatientid = require('../services/getPatientid');
