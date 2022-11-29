@@ -20,3 +20,8 @@ enum DoctorScreen{
   home,
   profile,
 }
+
+enum AdminScreen{
+  payments,
+  users,
+}

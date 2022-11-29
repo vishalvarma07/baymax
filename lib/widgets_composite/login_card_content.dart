@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:telehealth/screens/admin/admin_home.dart';
 import 'package:telehealth/screens/doctor/doctor_home.dart';
 import 'package:telehealth/screens/patient/patient_home.dart';
 import 'package:telehealth/widgets_basic/labeled_radio.dart';
@@ -78,6 +79,8 @@ class _LoginCardContentState extends State<LoginCardContent> {
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientHome()));
                   }else if(_userType==UserType.doctor){
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorHome()));
+                  }else{
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminHome()));
                   }
                 },
               ),
