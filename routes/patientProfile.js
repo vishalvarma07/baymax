@@ -19,6 +19,7 @@ router.get('/', credentialCheck, (req, res) => {
             details.status = 'failed';
             res.status(404).json(details);
         }
+        details.status = 'successful';
         details.data = rows;
         res.status(200).json(details);
     })
