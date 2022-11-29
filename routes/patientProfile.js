@@ -8,7 +8,7 @@ function validatePhoneNumber(input_str) {
     var re = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
   
     return re.test(input_str);
-  }
+}
 
 router.get('/', credentialCheck, (req, res) => {
     let userDetails = req.headers;
@@ -29,8 +29,10 @@ router.post('/', credentialCheck, (req, res) => {
     let userHeaders = req.headers;
     let userDetails = req.body;
     let details = {}
+    console.log(userDetails);
+    console.log(validatePhoneNumber(userDetails.phno));
     if(validatePhoneNumber(userDetails.phno)){
-        pool.query('update patient set fName = ?, lName = ?, phno = ?, gender = ?, height = ?, weight = ?, bloodType = ?, apartmentNo = ?, streetName = ?, state = ?, pincode = ? where uname = ?',[userDetails.fName, userDetails.lName, userDetails.phno, userDetails.gender, userDetails.height, userDetails.weight, userDetails.bloodType, userDetails.apartmentNo, userDetails.streetName, userDetails.state, userDetails.pincode, userHeaders.uname], function(err){
+        pool.query('update patient set dob = ?, fName = ?, lName = ?, phno = ?, gender = ?, height = ?, weight = ?, bloodType = ?, apartmentNo = ?, streetName = ?, state = ?, pincode = ? where uname = ?',[userDetails.dob, userDetails.fName, userDetails.lName, userDetails.phno, userDetails.gender, userDetails.height, userDetails.weight, userDetails.bloodType, userDetails.apartmentNo, userDetails.streetName, userDetails.state, userDetails.pincode, userHeaders.uname], function(err){
             if(err){
                 console.log(err);
                 details.status = 'failed';
