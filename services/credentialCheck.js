@@ -4,7 +4,6 @@ let pool = require('../resources');
 
 module.exports = (req, res, next) => {
     const loginDetails = req.headers;
-    console.log(req.headers);
     let details = {}
     pool.query(`select * from ${loginDetails.user_type} where uname = ?`, [loginDetails.uname], function(error, rows, fields){
         if(error){
