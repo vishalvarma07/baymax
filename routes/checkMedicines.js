@@ -2,7 +2,6 @@ var express = require('express')
 var router = express.Router();
 
 var pool = require('../resources');
-var app = require('../app');
 
 router.get('/', (req, res) => {
     pool.query(`select mQuantity from medicines where id = ${req.body.id}`, function(err, rows, fields) {

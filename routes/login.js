@@ -3,16 +3,14 @@ router = express.Router();
 const { createHash } = require('crypto');
 
 let pool = require('../resources');
-let app = require('../app')
 
 router.post('/', (req, res) => {
     const loginDetails = req.headers;
-    const loginType = req.headers.login_type;
-    const userType = req.headers.user_type;
+    console.log(loginDetails);
     let details = {}
-    if(loginType == 'user'){
-        pool.query('select * from ? where uname = ?', [userType, loginDetails.uname], function(error, rows, fields){
-            if(error){
+    if(loginDetails.login_type == 'user'){
+        pool.query(`select * from ${loginDetails.user_type} where uname = ?`, [loginDetails.uname], function(err, rows, fields){
+            if(err){
                 console.log(err);
                 details.status = 'failed'
                 res.status(404).json(details);
@@ -35,7 +33,7 @@ router.post('/', (req, res) => {
         })
     }
     else{
-        pool.query('select * from ? where uname = ?',[userType, loginDetails.uname], function(err, rows, fields){
+        pool.query(`select * from ${loginDetails.user_type} where uname = ?`,[loginDetails.uname], function(err, rows, fields){
             if(err){
                 console.log(err);
                 details.status = 'failed';
