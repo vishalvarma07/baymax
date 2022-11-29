@@ -9,6 +9,6 @@
     "yarn": "^1.22.19"
   },
   "scripts": {
-    "start": "node resources.js; node app.js"
+    "start": "node resources.js && node app.js"
   }
 }

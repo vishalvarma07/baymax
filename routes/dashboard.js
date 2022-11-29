@@ -11,7 +11,6 @@ router.get('/',credentialCheck, (req, res) => {
     console.log(userDetails.uname);
     pool.query('select id from patient where uname = ?',[userDetails.uname], function(err, rows, fields) {
         if(err){
-            console.log(err);
             upcomingappointments.status = 'successful';
             res.status(404).json(upcomingappointments);
         }
@@ -45,7 +44,7 @@ router.get('/',credentialCheck, (req, res) => {
                         }
                         else{
                             upcomingappointments.status = 'successful';
-                            const yetTopay = rows[0].noOfPaymentsYetToBePaid;
+                            const yetTopay = parseInt(rows[0].noOfPaymentsYetToBePaid);
                             const yetToverify = rows[0].noOfPaymentsYetToBeVerified - yetTopay;
                             upcomingappointments.yetTopay = yetTopay;
                             upcomingappointments.yetToverify = yetToverify;
