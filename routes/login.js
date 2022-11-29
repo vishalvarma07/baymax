@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
                 if(rows[0].pwd == loginDetails.pwd){
                     console.log("login successful");
                     details.status = 'successful';
-                    details.banned = rows[0].ban;
+                    details.banned = Boolean(rows[0].ban);
                     res.status(201).json(details);
                 }
                 else{
@@ -52,7 +52,7 @@ router.post('/', (req, res) => {
                 if(hash == req.body.hash){
                     details.hash = rows[0].pwd;
                     details.status = 'successful';
-                    details.banned = rows[0].ban;
+                    details.banned = Boolean(rows[0].ban);
                     res.status(200).json(details);
                 }
                 else{
