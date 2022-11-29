@@ -1,6 +1,7 @@
 let express = require('express');
 let router = express.Router();
 let pool = require('../resources');
+
 const { route } = require('./dashboard');
 let credentialCheck = require('../services/credentialCheck');
 const getPatientid = require('../services/getPatientid');
@@ -21,13 +22,6 @@ router.get('/', credentialCheck, (req, res) => {
                 dashboardDetails.status = 'failed';
                 res.status(400).json(dashboardDetails);
             }
-            pool.query('select * from medicines where mQuantity > 0', function(err, rows, fields) {
-                if(err){
-                    dashboardDetails.status = 'failed';
-                    res.status(404).json(dashboardDetails);
-                }
-                dashboardDetails.meds = rows;
-            });
             if(rows.length == 0){
                 dashboardDetails.status = 'successful';
                 dashboardDetails.data = [];
@@ -36,6 +30,13 @@ router.get('/', credentialCheck, (req, res) => {
                 dashboardDetails.status = 'successful';
                 dashboardDetails.data = rows;
             }
+            pool.query('select * from medicines where mQuantity > 0', function(err, rows, fields) {
+                if(err){
+                    dashboardDetails.status = 'failed';
+                    res.status(404).json(dashboardDetails);
+                }
+                dashboardDetails.meds = rows;
+            });
             res.status(200).json(dashboardDetails);
         })
     })

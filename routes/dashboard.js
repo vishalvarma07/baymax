@@ -9,12 +9,15 @@ router.get('/',credentialCheck, (req, res) => {
     let userDetails = req.headers;
     let upcomingappointments = {};
     console.log(userDetails.uname);
-    pool.query('select id from patient where uname = ?',[userDetails.uname], function(err, rows, fields) {
+    pool.query('select id, fName from patient where uname = ?',[userDetails.uname], function(err, rows, fields) {
         if(err){
-            upcomingappointments.status = 'successful';
+            console.log(err);
+            upcomingappointments.status = 'failed';
             res.status(404).json(upcomingappointments);
         }
         let uid = rows[0].id;
+        let patientName = rows[0].fName;
+        upcomingappointments.patientName = patientName;
         pool.query('select * from upcomingappointments where id = ?',[uid], function(err, rows, fields){
             if(err){
                 console.log(err);
