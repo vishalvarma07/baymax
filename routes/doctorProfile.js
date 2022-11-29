@@ -13,7 +13,7 @@ function validatePhoneNumber(input_str) {
 router.get('/', credentialCheck, (req, res) => {
     let userDetails = req.headers;
     let details = {}
-    pool.query('select * from patient where uname = ?',[userDetails.uname], function(err, rows, fields){
+    pool.query('select * from doctor where uname = ?',[userDetails.uname], function(err, rows, fields){
         if(err){
             console.log(err);
             details.status = 'failed';
@@ -30,7 +30,7 @@ router.post('/', credentialCheck, (req, res) => {
     let userDetails = req.body;
     let details = {}
     if(validatePhoneNumber(userDetails.phno)){
-        pool.query('update patient set fName = ?, lName = ?, phno = ?, gender = ?, height = ?, weight = ?, bloodType = ?, apartmentNo = ?, streetName = ?, state = ?, pincode = ?',[userDetails.fName, userDetails.lName, userDetails.phno, userDetails.gender, userDetails.height, userDetails.weight, userDetails.bloodType, userDetails.apartmentNo, userDetails.streetName, userDetails.state, userDetails.pincode], function(err){
+        pool.query('update doctor set fName = ?, lName = ?, phno = ?, gender = ?, apartmentNo = ?, streetName = ?, state = ?, pincode = ?',[userDetails.fName, userDetails.lName, userDetails.phno, userDetails.gender, userDetails.apartmentNo, userDetails.streetName, userDetails.state, userDetails.pincode], function(err){
             if(err){
                 console.log(err);
                 details.status = 'failed';
