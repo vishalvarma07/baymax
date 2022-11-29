@@ -14,6 +14,7 @@ patientDashboardRouter = require('./routes/dashboard');
 doctorDashboardRouter = require('./routes/doctorDashboard');
 checkMedicineRouter = require('./routes/checkMedicines');
 paymentRouter = require('./routes/payments');
+patientProfileRouter = require('./routes/patientProfile');
 
 //Routes
 app.use('/login', loginRouter);
@@ -21,6 +22,7 @@ app.use('/dashboard', patientDashboardRouter);
 app.use('/doctordashboard', doctorDashboardRouter);
 app.use('/checkmedicine', checkMedicineRouter);
 app.use('/payments', paymentRouter);
+app.use('/patientprofile', patientProfileRouter);
 
 //test
 app.currentUser = false;

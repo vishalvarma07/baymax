@@ -43,3 +43,5 @@ router.post('/', credentialCheck, (req, res) => {
         res.status(401).json(details);
     }
 })
+
+module.exports = router;
