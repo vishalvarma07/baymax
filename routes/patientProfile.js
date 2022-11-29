@@ -13,7 +13,7 @@ function validatePhoneNumber(input_str) {
 router.get('/', credentialCheck, (req, res) => {
     let userDetails = req.headers;
     let details = {}
-    pool.query('select * from patient where uname = ',[userDetails.uname], function(err, rows, fields){
+    pool.query('select * from patient where uname = ?',[userDetails.uname], function(err, rows, fields){
         if(err){
             console.log(err);
             details.status = 'failed';
