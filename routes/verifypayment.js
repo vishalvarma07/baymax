@@ -6,15 +6,9 @@ let credentialCheck = require('../services/credentialCheck');
 router.get('/', credentialCheck, (req, res) =>{
     let adminDetails = req.headers;
     let details = {};
-    pool.query('select id from admin where email = ?',[adminDetails.uname], function(err, rows, fields){
-        if(err){
-            console.log(err);
-            details.status = 'failed';
-            res.status(404).json(details);
-        }
-        
-    })
+    pool.query('select * from payments where verifiedBy = NULL or payStatus = 0', function(err, rows, fields){
 
+    })
 })
 
 module.exports = router;
