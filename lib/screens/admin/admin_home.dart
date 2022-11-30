@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:telehealth/enums.dart';
 import 'package:telehealth/screens/admin/admin_patients.dart';
-import 'package:telehealth/screens/admin/admin_payments.dart';
 
 import 'admin_dashboard.dart';
 
@@ -92,9 +91,9 @@ class _AdminHomeState extends State<AdminHome> {
       body: Builder(
         builder: (context){
           if(_adminScreen==AdminScreen.payments){
-            return AdminPayments();
+            return AdminDashboard();
           }
-          return AdminDashboard();
+          return AdminPatients();
         },
       ),
     );

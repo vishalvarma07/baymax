@@ -16,25 +16,67 @@ class AdminPaymentCard extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
+          child: Container(
             height: 200,
+            constraints: BoxConstraints(
+              maxWidth: 500
+            ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListView(
                 children: [
                   DoctorMedicineTile(
-                    medicine: "Paracetamol",
+                    medicine: "Paracetamol Qty 1",
                     value: 1,
                     allowModifications: false,
                   ),
                   DoctorMedicineTile(
-                    medicine: "Paracetamol",
+                    medicine: "Paracetamol Qty 1",
+                    value: 1,
+                    allowModifications: false,
+                  ),
+                  DoctorMedicineTile(
+                    medicine: "Paracetamol Qty 1",
+                    value: 1,
+                    allowModifications: false,
+                  ),
+                  DoctorMedicineTile(
+                    medicine: "Paracetamol Qty 1",
+                    value: 1,
+                    allowModifications: false,
+                  ),
+                  DoctorMedicineTile(
+                    medicine: "Paracetamol Qty 1",
+                    value: 1,
+                    allowModifications: false,
+                  ),
+                  DoctorMedicineTile(
+                    medicine: "Paracetamol Qty 1",
                     value: 1,
                     allowModifications: false,
                   ),
                 ],
               ),
             ),
+          ),
+        ),
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: 500,
+          ),
+          child: Column(
+            children: [
+              DoctorMedicineTile(
+                medicine: "Doctor Consultation Fee",
+                value: 200,
+                allowModifications: false,
+              ),
+              DoctorMedicineTile(
+                medicine: "Medicine Sum total",
+                value: 200,
+                allowModifications: false,
+              ),
+            ],
           ),
         ),
         Padding(
@@ -50,7 +92,7 @@ class AdminPaymentCard extends StatelessWidget {
                   color: Colors.white,
                 ),),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               FilledMaterialButton(
