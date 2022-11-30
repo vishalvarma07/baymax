@@ -1,5 +1,3 @@
-let express = require('express');
-let router = express.Router();
 let pool = require('../resources');
 
 module.exports = async (uname) => {

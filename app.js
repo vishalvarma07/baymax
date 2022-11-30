@@ -9,6 +9,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Routers
+signupRouter = require('./routes/signup');
 loginRouter = require('./routes/login');
 patientDashboardRouter = require('./routes/dashboard');
 doctorDashboardRouter = require('./routes/doctorDashboard');
@@ -19,6 +20,7 @@ doctorProfileRouter = require('./routes/doctorProfile');
 passwordChangeRouter = require('./routes/passwordChange');
 
 //Routes
+app.use('/signup', signupRouter);
 app.use('/login', loginRouter);
 app.use('/dashboard', patientDashboardRouter);
 app.use('/doctordashboard', doctorDashboardRouter);
