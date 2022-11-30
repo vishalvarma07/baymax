@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
             details.status = 'failed'
             res.status(404).json(details);
         }
-        if(rows.length == 0){
+        else if(rows.length == 0){
             details.status = 'failed';
             res.status(401).json(details);
         }

@@ -14,6 +14,7 @@ router.get('/',credentialCheck, (req, res) => {
             console.log(err);
             upcomingappointments.status = 'failed';
             res.status(404).json(upcomingappointments);
+            return;
         }
         let uid = rows[0].id;
         let patientName = rows[0].fName;
