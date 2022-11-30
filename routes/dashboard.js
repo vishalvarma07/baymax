@@ -24,6 +24,7 @@ router.get('/',credentialCheck, (req, res) => {
                 console.log(err);
                 upcomingappointments.status = 'failed';
                 res.status(404).json(upcomingappointments);
+                return;
             }
             else{
                 upcomingappointments.status = 'successful';
@@ -33,6 +34,7 @@ router.get('/',credentialCheck, (req, res) => {
                         console.log(err);
                         upcomingappointments.status = 'failed';
                         res.status(404).json(upcomingappointments);
+                        return;
                     }
                     else{
                         if(rows.length == 0){
@@ -48,6 +50,7 @@ router.get('/',credentialCheck, (req, res) => {
                                 console.log(err);
                                 upcomingappointments.status = 'failed';
                                 res.status(404).json(upcomingappointments);
+                                return;
                             }
                             else{
                                 if(rows.length == 0){
@@ -55,6 +58,7 @@ router.get('/',credentialCheck, (req, res) => {
                                     upcomingappointments.yetTopay = 0;
                                     upcomingappointments.yetToverify = 0;
                                     res.status(200).json(upcomingappointments);
+                                    return;
                                 }
                                 else{
                                     upcomingappointments.status = 'successful';
@@ -63,6 +67,7 @@ router.get('/',credentialCheck, (req, res) => {
                                     upcomingappointments.yetTopay = yetTopay;
                                     upcomingappointments.yetToverify = yetToverify;
                                     res.status(200).json(upcomingappointments);
+                                    return;
                                 }
                             }
                         })

@@ -19,6 +19,7 @@ patientProfileRouter = require('./routes/patientProfile');
 doctorProfileRouter = require('./routes/doctorProfile');
 passwordChangeRouter = require('./routes/passwordChange');
 verifypayment = require('./routes/verifypayment');
+userAccounts = require('./routes/useraccounts');
 
 //Routes
 app.use('/signup', signupRouter);
@@ -31,9 +32,16 @@ app.use('/patientprofile', patientProfileRouter);
 app.use('/doctorprofile', doctorProfileRouter);
 app.use('/passwordchange', passwordChangeRouter);
 app.use('/verifypayment', verifypayment);
+app.use('/useraccounts', userAccounts);
 
-//test
-app.currentUser = false;
+//cors
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
 
 app.listen(frontendport, () => {
     console.log("port 52117 accessed")
