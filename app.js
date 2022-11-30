@@ -18,6 +18,7 @@ paymentRouter = require('./routes/payments');
 patientProfileRouter = require('./routes/patientProfile');
 doctorProfileRouter = require('./routes/doctorProfile');
 passwordChangeRouter = require('./routes/passwordChange');
+verifypayment = require('./routes/verifypayment');
 
 //Routes
 app.use('/signup', signupRouter);
@@ -29,6 +30,7 @@ app.use('/payments', paymentRouter);
 app.use('/patientprofile', patientProfileRouter);
 app.use('/doctorprofile', doctorProfileRouter);
 app.use('/passwordchange', passwordChangeRouter);
+app.use('/verifypayment', verifypayment);
 
 //test
 app.currentUser = false;
