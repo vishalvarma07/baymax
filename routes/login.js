@@ -50,7 +50,7 @@ router.post('/', (req, res) => {
                 console.log(currentMonth, currentYear);
                 const key = rows[0].pwd + loginDetails.user_type +currentMonth + currentYear;
                 const hash = createHash('sha256').update(key).digest('hex');
-                if(hash == req.body.hash){
+                if(hash == req.headers.pwd){
                     details.hash = rows[0].pwd;
                     details.status = 'successful';
                     console.log('login successful');
