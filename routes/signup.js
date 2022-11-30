@@ -7,7 +7,7 @@ router.post('/', (req, res) => {
     let details = {}
     let userDetails = req.headers;
     let signupDetails = req.body;
-    pool.query(`insert into ${userDetails.user_type} (uname, pwd, dob) values (?, ?, ?)`,[signupDetails.uname, signupDetails.pwd, signupDetails.dob], function(err){
+    pool.query(`insert into ${userDetails.user_type} (fName, lName, uname, pwd, dob) values (?, ?, ?)`,[signupDetails.fName, signupDetails.lName,signupDetails.uname, signupDetails.pwd, signupDetails.dob], function(err){
         if(err){
             console.log(err);
             details.status = 'failed';
