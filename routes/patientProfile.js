@@ -1,3 +1,4 @@
+const e = require('express');
 let express = require('express');
 let router = express.Router();
 let pool = require('../resources');
@@ -40,8 +41,10 @@ router.post('/', credentialCheck, (req, res) => {
                 details.status = 'failed';
                 res.status(404).json(details);
             }
-            details.status = 'successful';
-            res.status(200).json(details);
+            else{
+                details.status = 'successful';
+                res.status(200).json(details);
+            }
         })
     }
     else{
