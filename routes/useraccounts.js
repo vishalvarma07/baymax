@@ -9,12 +9,12 @@ router.get('/', credentialCheck, (req, res) => {
         if(err){
             console.log(err);
             details.status = 'failed';
-            res.status.json(details);
+            res.status(404).json(details);
             return;
         }
         else{
             details.status = 'successful';
-            res.status.json(details);
+            res.status(200).json(details);
             return;
         }
     })
