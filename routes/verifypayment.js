@@ -1,6 +1,4 @@
-const e = require('express');
 let express = require('express');
-const { response } = require('../app');
 let router = express.Router();
 let pool = require('../resources');
 let credentialCheck = require('../services/credentialCheck');
@@ -13,6 +11,11 @@ router.get('/', credentialCheck, (req, res) =>{
             console.log(err);
             details.status = 'failed';
             res.status(404).json(details);
+        }
+        else if(rows.length == 0){
+            details.data = [];
+            details.status = 'successful';
+            res.status(200).json(details);
         }
         else{
             details.data = rows;
