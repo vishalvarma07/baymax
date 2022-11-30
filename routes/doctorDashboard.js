@@ -36,8 +36,8 @@ router.get('/', credentialCheck, (req, res) => {
                     res.status(404).json(dashboardDetails);
                 }
                 dashboardDetails.meds = rows;
+                res.status(200).json(dashboardDetails);
             });
-            res.status(200).json(dashboardDetails);
         })
     })
 })
