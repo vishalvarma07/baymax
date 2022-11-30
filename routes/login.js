@@ -47,7 +47,7 @@ router.post('/', (req, res) => {
             else{
                 const currentYear = String(new Date().getFullYear());
                 const currentMonth = String(new Date().getMonth()+1);
-                //console.log(currentMonth, currentYear);
+                console.log(currentMonth, currentYear);
                 const key = rows[0].pwd + loginDetails.user_type +currentMonth + currentYear;
                 const hash = createHash('sha256').update(key).digest('hex');
                 if(hash == req.body.hash){
