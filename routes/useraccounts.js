@@ -5,7 +5,7 @@ let credentialCheck = require('../services/credentialCheck');
 
 router.get('/', credentialCheck, (req, res) => {
     let details = {}
-    pool.query('select * from patients', function(err, rows, fields){
+    pool.query('select * from patient', function(err, rows, fields){
         if(err){
             console.log(err);
             details.status = 'failed';
