@@ -55,7 +55,7 @@ router.post('/', (req, res) => {
                     details.status = 'successful';
                     console.log('login successful');
                     details.banned = Boolean(rows[0].ban);
-                    res.status(200).json(details);
+                    res.status(201).json(details);
                 }
                 else{
                     details.status = 'failed';
