@@ -5,7 +5,13 @@ import '../widgets_basic/material_text_button.dart';
 
 
 class PatientAppointmentCard extends StatelessWidget {
-  const PatientAppointmentCard({Key? key}) : super(key: key);
+  final String name, doctorName;
+  final DateTime appointmentDate;
+  final int slot;
+  final int appointmentID;
+  final String reason;
+  final Function onAppointmentCancel;
+  const PatientAppointmentCard({Key? key, required this.name, required this.doctorName, required this.appointmentDate, required this.slot, required this.appointmentID, required this.reason, required this.onAppointmentCancel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +21,7 @@ class PatientAppointmentCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Flexible(
-            child: Text("Welcome Sashank!",style: TextStyle(
+            child: Text("Welcome $name!",style: const TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w400,
                 color: Colors.white
@@ -25,7 +31,7 @@ class PatientAppointmentCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Flexible(
-                child: Text("You have an appointment with Dr. XYZ on 12/12/22 from 4:00PM to 7:00PM",style: TextStyle(
+                child: Text("You have an appointment with Dr. $doctorName on ${appointmentDate.month}/${appointmentDate.day}/${appointmentDate.year} from $slot:00 to ${slot+1}:00",style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w300,
                     color: Colors.white
@@ -43,11 +49,12 @@ class PatientAppointmentCard extends StatelessWidget {
                 context: context,
                 builder: (context)=>AlertDialog(
                   title: const Text("Appointment Info"),
-                  content: Text("Symptom: Stomach Ache"),
+                  content: Text("Reason: $reason}"),
                   actions: [
                     TextButton(
-                      onPressed: (){
+                      onPressed: () async{
                         Navigator.pop(context);
+                        onAppointmentCancel(appointmentID);
                       },
                       child: const Text("Cancel Appointment"),
                     ),

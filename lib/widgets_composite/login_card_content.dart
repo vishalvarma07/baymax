@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:telehealth/screens/admin/admin_home.dart';
 import 'package:telehealth/screens/doctor/doctor_home.dart';
 import 'package:telehealth/screens/patient/patient_home.dart';
+import 'package:telehealth/services/api_requests/http_services.dart';
+import 'package:telehealth/widgets_basic/error_dialog.dart';
 import 'package:telehealth/widgets_basic/labeled_radio.dart';
 import '../enums.dart';
 import '../widgets_basic/custom_text_field.dart';
@@ -23,8 +25,19 @@ class _LoginCardContentState extends State<LoginCardContent> {
 
   _LoginCardContentState(this.onSignupButtonPress);
 
+  final TextEditingController emailFieldController=TextEditingController();
+  final TextEditingController passwordFieldController=TextEditingController();
+
   bool _rememberCredentials=false;
   bool _loggingIn=false;
+
+
+  @override
+  void dispose() {
+    emailFieldController.dispose();
+    passwordFieldController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +54,11 @@ class _LoginCardContentState extends State<LoginCardContent> {
           const SizedBox(
             height: 12,
           ),
-          CustomTextField(label: "Email", textInputType: TextInputType.emailAddress, hintText: "someone@example.com", onChanged: (value){},),
+          CustomTextField(label: "Email", controller: emailFieldController, textInputType: TextInputType.emailAddress,  hintText: "someone@example.com", onChanged: (value){},),
           const SizedBox(
             height: 8,
           ),
-          CustomTextField(label: "Password", obscureText: true, onChanged: (value){},),
+          CustomTextField(label: "Password", controller: passwordFieldController, obscureText: true, onChanged: (value){},),
           const SizedBox(
             height: 8,
           ),
@@ -71,16 +84,50 @@ class _LoginCardContentState extends State<LoginCardContent> {
               MaterialTextButton(
                 buttonName: "Login",
                 child: _loggingIn?const CircularProgressIndicator():null,
-                onPressed: (){
-                  // setState(() {
-                  //   _loggingIn=!_loggingIn;
-                  // });
-                  if(_userType==UserType.patient){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientHome()));
-                  }else if(_userType==UserType.doctor){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorHome()));
+                onPressed: () async{
+                  setState(() {
+                    _loggingIn=true;
+                  });
+
+                  LoginStatus loginStatus=await login(emailFieldController.text, passwordFieldController.text, _userType);
+                  setState(() {
+                    _loggingIn=false;
+                  });
+
+                  // LoginStatus loginStatus=LoginStatus.success;
+
+                  if(loginStatus==LoginStatus.success){
+                    if(!mounted){
+                      return;
+                    }
+                    if(_userType==UserType.patient){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientHome()));
+                    }else if(_userType==UserType.doctor){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorHome()));
+                    }else{
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminHome()));
+                    }
+                  }else if(loginStatus==LoginStatus.accountBanned){
+                    showDialog(
+                      context: context,
+                      builder: (context)=>ErrorDialog(
+                        title: "Account Banned",
+                        content: "Your account has been banned by the admin. Contact admin for further details",
+                        onPressed: (){
+                          Navigator.pop(context);
+                        }),
+                    );
                   }else{
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminHome()));
+                    showDialog(
+                      context: context,
+                      builder: (context)=>ErrorDialog(
+                        title: "Login Error",
+                        content: "Check your email/password and network connection",
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                      ),
+                    );
                   }
                 },
               ),

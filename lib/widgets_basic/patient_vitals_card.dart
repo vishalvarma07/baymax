@@ -24,8 +24,9 @@ class PatientVitalsCard extends StatelessWidget {
               child: Builder(
                 builder: (context){
                   if(double.tryParse(vitalValue)!=null){
+                    String vitalValueFixed=double.parse(vitalValue).toStringAsFixed(0);
                     return NumberSlideAnimation(
-                      number: vitalValue,
+                      number: vitalValueFixed,
                       duration: const Duration(seconds: 1),
                       textStyle: TextStyle(
                         fontSize: 30,

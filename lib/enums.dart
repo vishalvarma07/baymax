@@ -25,3 +25,10 @@ enum AdminScreen{
   payments,
   users,
 }
+
+
+enum LoginStatus{
+  failed,
+  success,
+  accountBanned,
+}

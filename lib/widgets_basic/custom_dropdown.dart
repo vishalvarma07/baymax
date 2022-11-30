@@ -18,7 +18,7 @@ class CustomDropdown extends StatelessWidget {
             DropdownMenuItem(value: menuOptions[menuOptions.keys.toList()[i]],child: Text(menuOptions.keys.toList()[i]),)
         ],
         onChanged: (String? value){
-
+          onChanged(value);
         },
         decoration: InputDecoration(
           border: OutlineInputBorder(
