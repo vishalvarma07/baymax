@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:telehealth/const.dart';
+import 'package:telehealth/global_vars.dart';
 import 'package:telehealth/screens/login_screen.dart';
+import 'package:telehealth/services/shared_prefs.dart';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  usernameGlobal=await getStoredUname();
+  cookieHashGlobal=await getStoredLoginToken();
+  userTypeGlobal=await getStoredUserType();
+
   runApp(const MyApp());
 }
 

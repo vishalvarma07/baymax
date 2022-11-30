@@ -22,18 +22,24 @@ class PatientDashboard extends StatelessWidget {
         }
         return ListView(
           children: [
-            PatientAppointmentCard(
-              name: snapshot.data!['patientName'],
-              doctorName: snapshot.data!['data'][0]['fName'],
-              appointmentDate: DateTime.parse(snapshot.data!['data'][0]['appointmentDate']),
-              slot: snapshot.data!['data'][0]['slotId'],
-              appointmentID: snapshot.data!['data'][0]['appointmentId'],
-              reason: snapshot.data!['data'][0]['reason'],
-              onAppointmentCancel: (appointmentID) async {
+            if(snapshot.data!['data'].isNotEmpty)
+              PatientAppointmentCard(
+                name: snapshot.data!['patientName'],
+                doctorName: snapshot.data!['data'][0]['fName'],
+                appointmentDate: DateTime.parse(snapshot.data!['data'][0]['appointmentDate']),
+                slot: snapshot.data!['data'][0]['slotId'],
+                appointmentID: snapshot.data!['data'][0]['appointmentId'],
+                reason: snapshot.data!['data'][0]['reason'],
+                onAppointmentCancel: (appointmentID) async {
 
-              },
+                },
 
-            ),
+              ),
+            if(snapshot.data!['data'].isEmpty)
+              PatientAppointmentCard(
+                name: snapshot.data!['patientName'],
+                appointmentPresent: false,
+              ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -42,16 +48,16 @@ class PatientDashboard extends StatelessWidget {
                   children: [
                     PatientVitalsCard(
                       vitalName: "Blood Type",
-                      vitalValue: snapshot.data!['data'][0]['bloodType']??"--",
+                      vitalValue: snapshot.data!['bloodType']??"--",
                       valueStringColor: Colors.red,
                     ),
                     PatientVitalsCard(
                       vitalName: "Height",
-                      vitalValue: snapshot.data!['data'][0]['height']??"--",
+                      vitalValue: snapshot.data!['height']??"--",
                     ),
                     PatientVitalsCard(
                       vitalName: "Weight",
-                      vitalValue: snapshot.data!['data'][0]['weight']??"--",
+                      vitalValue: snapshot.data!['weight']??"--",
                     ),
                   ],
                 ),

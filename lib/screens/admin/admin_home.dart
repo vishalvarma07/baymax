@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:telehealth/enums.dart';
 import 'package:telehealth/screens/admin/admin_patients.dart';
+import 'package:telehealth/services/shared_prefs.dart';
 
 import 'admin_dashboard.dart';
 
@@ -79,6 +80,7 @@ class _AdminHomeState extends State<AdminHome> {
                     leading: const Icon(Icons.logout),
                     title: const Text("Logout"),
                     onTap:(){
+                      clearStoredLoginData();
                       Navigator.pop(context);
                       Navigator.pop(_screenContext);
                     }

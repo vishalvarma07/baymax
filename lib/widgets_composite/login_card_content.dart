@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:telehealth/global_vars.dart';
 import 'package:telehealth/screens/admin/admin_home.dart';
 import 'package:telehealth/screens/doctor/doctor_home.dart';
 import 'package:telehealth/screens/patient/patient_home.dart';
@@ -31,9 +32,32 @@ class _LoginCardContentState extends State<LoginCardContent> {
   bool _rememberCredentials=false;
   bool _loggingIn=false;
 
+  void attemptAutoLogin() async{
+    if(cookieHashGlobal!="" && userTypeGlobal!="" && usernameGlobal!=""){
+      LoginStatus loginStatus=await cookieLogin();
+      if(!mounted) return;
+      if(loginStatus==LoginStatus.success){
+        if(userTypeGlobal=="patient"){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientHome()));
+        }else if(userTypeGlobal=="doctor"){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorHome()));
+        }else{
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminHome()));
+        }
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    attemptAutoLogin();
+  }
+
 
   @override
   void dispose() {
+    attemptAutoLogin();
     emailFieldController.dispose();
     passwordFieldController.dispose();
     super.dispose();
@@ -89,7 +113,7 @@ class _LoginCardContentState extends State<LoginCardContent> {
                     _loggingIn=true;
                   });
 
-                  LoginStatus loginStatus=await login(emailFieldController.text, passwordFieldController.text, _userType);
+                  LoginStatus loginStatus=await login(emailFieldController.text, passwordFieldController.text, _userType, _rememberCredentials);
                   setState(() {
                     _loggingIn=false;
                   });

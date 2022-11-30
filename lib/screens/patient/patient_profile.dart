@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:telehealth/global_vars.dart';
 import 'package:telehealth/services/api_requests/http_services.dart';
+import 'package:telehealth/services/shared_prefs.dart';
 import 'package:telehealth/widgets_basic/custom_dropdown.dart';
 import 'package:telehealth/widgets_basic/material_text_button.dart';
 
@@ -42,18 +44,18 @@ class _PatientProfileState extends State<PatientProfile> {
     Map<String,dynamic> patientProfile=await getPatientProfile();
     _firstName.text=patientProfile['data'][0]['fName'];
     _lastName.text=patientProfile['data'][0]['lName'];
-    _phoneNumber.text=patientProfile['data'][0]['phno'];
-    _apartmentNumber.text=patientProfile['data'][0]['apartmentNo'];
-    _streetName.text=patientProfile['data'][0]['streetName'];
-    _zipcode.text=patientProfile['data'][0]['pincode'].toString();
-    _state.text=patientProfile['data'][0]['state'];
+    _phoneNumber.text=patientProfile['data'][0]['phno']??"";
+    _apartmentNumber.text=patientProfile['data'][0]['apartmentNo']??"";
+    _streetName.text=patientProfile['data'][0]['streetName']??"";
+    _zipcode.text=patientProfile['data'][0]['pincode']!=null?patientProfile['data'][0]['pincode'].toString():"".toString();
+    _state.text=patientProfile['data'][0]['state']??"";
     DateTime dobDateTime=DateTime.parse(patientProfile['data'][0]['dob']);
     _dateOfBirth.text="${dobDateTime.year}/${dobDateTime.month<10?"0${dobDateTime.month}":dobDateTime.month}/${dobDateTime.day<10?"0${dobDateTime.day}":dobDateTime.day}";
-    _height.text=patientProfile['data'][0]['height'];
-    _weight.text=patientProfile['data'][0]['weight'];
+    _height.text=patientProfile['data'][0]['height']??"";
+    _weight.text=patientProfile['data'][0]['weight']??"";
 
-    gender=patientProfile['data'][0]['gender'];
-    bloodType=patientProfile['data'][0]['bloodType'];
+    gender=patientProfile['data'][0]['gender']??"Male";
+    bloodType=patientProfile['data'][0]['bloodType']??"A+";
 
     setState(() {
       _profileLoaded=true;
@@ -197,6 +199,7 @@ class _PatientProfileState extends State<PatientProfile> {
                                 if(!mounted){
                                   return;
                                 }
+                                clearStoredLoginData();
                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password Changed Successfully")));
                                 Navigator.pop(context);
                                 Navigator.pop(homeScreenContext);

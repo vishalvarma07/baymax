@@ -12,13 +12,19 @@ class AdminPaymentCard extends StatelessWidget {
       title: Text("Mr.ABC's appointment with Dr.XYZ on 11/22/2022 1:00PM - 2:00PM"),
       subtitle: Text("Reason"),
       // initiallyExpanded: !upcomingAppointment,
-      // trailing: Container(),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check,color: Colors.amber,),
+          Icon(Icons.check,color: Colors.green,),
+        ],
+      ),
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             height: 200,
-            constraints: BoxConstraints(
+            constraints: const BoxConstraints(
               maxWidth: 500
             ),
             child: Padding(

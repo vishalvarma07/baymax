@@ -11,6 +11,7 @@ import 'package:telehealth/screens/patient/patient_reserve_apppointment.dart';
 
 import '../../const.dart';
 import '../../enums.dart';
+import '../../services/shared_prefs.dart';
 
 class PatientHome extends StatefulWidget {
   const PatientHome({Key? key}) : super(key: key);
@@ -146,6 +147,7 @@ class _PatientHomeState extends State<PatientHome> {
                     leading: const Icon(Icons.logout),
                     title: const Text("Logout"),
                     onTap:(){
+                      clearStoredLoginData();
                       Navigator.pop(context);
                       Navigator.pop(_screenContext);
                     }
