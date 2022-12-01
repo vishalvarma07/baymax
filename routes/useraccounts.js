@@ -23,8 +23,9 @@ router.get('/', credentialCheck, (req, res) => {
 
 router.post('/', credentialCheck, (req, res) =>{
     let userDetails = req.headers;
+    let banDetails = req.body;
     let details = {};
-    pool.query('update patient set ban = true where uname = ', [userDetails.uname], function(err){
+    pool.query('update patient set ban = ? where uname = ?', [(banDetails.banstatus == 'ban'), banDetails.uname], function(err){
         if(err){
             console.log(err);
             details.status = 'failed';
