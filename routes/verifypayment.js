@@ -50,13 +50,9 @@ router.get('/', credentialCheck, (req, res) =>{
                                         return;
                                     }
                                     else{
-                                        details.data[i].medverified = true;
                                         details.data[i].meds = []
                                         for(let j = 0;j<rows.length;j++){
                                             details.data[i].meds.push({"id":rows[j].medicineId, "name":rows[j].mName,"quantity":rows[j].medOrderedQuantity,"price":rows[0].mPrice});
-                                            if(rows[j].verifiedBy == null){
-                                                details.data[i].medverified = false;
-                                            }
                                             if(i == details.data.length - 1 && j == rows.length - 1){
                                                 details.status = 'successful';
                                                 res.status(200).json(details);
