@@ -1,5 +1,4 @@
 let express = require('express');
-// const PoolConnection = require('mysql2/typings/mysql/lib/PoolConnection');
 let router = express.Router();
 let pool = require('../resources');
 let credentialCheck = require('../services/credentialCheck');
@@ -74,12 +73,13 @@ router.get('/', credentialCheck, (req, res) =>{
 })
 
 
-router.get('/', credentialCheck, (req, res) => {
+router.post('/', credentialCheck, (req, res) => {
     let paymentDetails = req.body;
-    let userDetails = {}
+    let userDetails = req.headers;
     let details = {}
     if(paymentDetails.type == 'payment'){
-        pool.query('select id from admin where uname = ?,'[userDetails.uname], function(err, rows, fields){
+        console.log('ehllo')
+        pool.query('select id from admin where uname = ?',[userDetails.uname], function(err, rows, fields){
             if(err){
                 console.log(err);
                 details.status = 'failed';
@@ -87,7 +87,8 @@ router.get('/', credentialCheck, (req, res) => {
                 return;
             }
             else{
-                pool.query('update payment set verifiedBy = ?',[rows[0].id], function(err){
+                console.log(rows);
+                pool.query('update payment set verifiedBy = ? where id = ?',[rows[0].id, paymentDetails.paymentId], function(err){
                     if(err){
                         console.log(err);
                         details.status = 'failed';
