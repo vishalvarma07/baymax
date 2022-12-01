@@ -1,5 +1,5 @@
 let express = require('express');
-const PoolConnection = require('mysql2/typings/mysql/lib/PoolConnection');
+// const PoolConnection = require('mysql2/typings/mysql/lib/PoolConnection');
 let router = express.Router();
 let pool = require('../resources');
 let credentialCheck = require('../services/credentialCheck');
