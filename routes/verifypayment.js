@@ -31,7 +31,7 @@ router.get('/', credentialCheck, (req, res) =>{
                     }
                     else{
                         details.data[i].adminverified = (details.data[i].verifiedBy == null);
-                        details.data[i].paystatus = (details.data[i].paystatus == 1);
+                        details.data[i].payStatus = (details.data[i].payStatus == 1);
                         details.data[i].dname = rows[0].fName;
                         pool.query('select fName from patient where id = ?',[details.data[i].patientID], function(err, rows, fields){
                             if(err){
