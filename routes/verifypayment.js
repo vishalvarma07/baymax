@@ -31,7 +31,7 @@ router.get('/', credentialCheck, (req, res) =>{
                     }
                     else{
                         details.data[i].adminverified = (details.data[i].verifiedBy == null);
-                        details.data[i].paystatus = (details.data[i].paystatus == 1);
+                        details.data[i].payStatus = (details.data[i].payStatus == 1);
                         details.data[i].dname = rows[0].fName;
                         pool.query('select fName from patient where id = ?',[details.data[i].patientID], function(err, rows, fields){
                             if(err){
@@ -50,13 +50,9 @@ router.get('/', credentialCheck, (req, res) =>{
                                         return;
                                     }
                                     else{
-                                        details.data[i].medverified = true;
                                         details.data[i].meds = []
                                         for(let j = 0;j<rows.length;j++){
                                             details.data[i].meds.push({"id":rows[j].medicineId, "name":rows[j].mName,"quantity":rows[j].medOrderedQuantity,"price":rows[0].mPrice});
-                                            if(rows[j].verifiedBy == null){
-                                                details.data[i].medverified = false;
-                                            }
                                             if(i == details.data.length - 1 && j == rows.length - 1){
                                                 details.status = 'successful';
                                                 res.status(200).json(details);
