@@ -75,54 +75,52 @@ router.post('/', credentialCheck, (req, res) => {
     let paymentDetails = req.body;
     let userDetails = req.headers;
     let details = {}
-    if(paymentDetails.type == 'payment'){
         console.log('ehllo')
         pool.query('select id from admin where uname = ?',[userDetails.uname], function(err, rows, fields){
-            if(err){
-                console.log(err);
-                details.status = 'failed';
-                res.status(404).json(details);
-                return;
-            }
-            else{
-                console.log(rows);
-                pool.query('update payment set verifiedBy = ? where id = ?',[rows[0].id, paymentDetails.paymentId], function(err){
-                    if(err){
-                        console.log(err);
-                        details.status = 'failed';
-                        res.status(404).json(details);
-                        return;
+        if(err){
+            console.log(err);
+            details.status = 'failed';
+            res.status(404).json(details);
+            return;
+        }
+        else{
+            console.log(rows);
+            pool.query('update payment set verifiedBy = ? where id = ?',[rows[0].id, paymentDetails.paymentId], function(err){
+                if(err){
+                    console.log(err);
+                    details.status = 'failed';
+                    res.status(404).json(details);
+                    return;
+                }
+                else{
+                    for(let i=0;i<paymentDetails.meds.length;i++){
+                        pool.query('update medorder set verifiedBy = ? where paymentId = ? and medicineId = ?',[rows[0].id, paymentDetails.paymentId, paymentDetails.meds[i].id], function(err){
+                            if(err){
+                                console.log(err);
+                                details.status = 'failed';
+                                res.status(404).json(details);
+                                return;
+                            }
+                            else{
+                                pool.query('update medicine set quantity = quantity - ? where id = ?',[paymentDetails.meds[i].quantity, paymentDetails.meds[i].id], function(err){
+                                    if(err){
+                                        console.log(err);
+                                        details.status = 'failed';
+                                        res.status(404).json(details);
+                                        return;
+                                    }
+                                    else{
+                                        details.status = 'successful';
+                                        res.status(200).json(details);
+                                        return;
+                                    }
+                                })
+                            }
+                        })
                     }
-                    else{
-                        for(let i=0;i<paymentDetails.meds.length;i++){
-                            pool.query('update medorder set verifiedBy = ? where paymentId = ? and medicineId = ?',[rows[0].id, paymentDetails.paymentId, paymentDetails.meds[i].id], function(err){
-                                if(err){
-                                    console.log(err);
-                                    details.status = 'failed';
-                                    res.status(404).json(details);
-                                    return;
-                                }
-                                else{
-                                    pool.query('update medicine set quantity = quantity - ? where id = ?',[paymentDetails.meds[i].quantity, paymentDetails.meds[i].id], function(err){
-                                        if(err){
-                                            console.log(err);
-                                            details.status = 'failed';
-                                            res.status(404).json(details);
-                                            return;
-                                        }
-                                        else{
-                                            details.status = 'successful';
-                                            res.status(200).json(details);
-                                            return;
-                                        }
-                                    })
-                                }
-                            })
-                        }
-                    }
-                })
-            }
-        })
-    }
+                }
+            })
+        }
+    })
 })
 module.exports = router;
