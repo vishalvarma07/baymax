@@ -33,6 +33,7 @@ router.get('/', credentialCheck, (req, res) =>{
                         details.data[i].adminverified = (details.data[i].verifiedBy == null);
                         details.data[i].payStatus = (details.data[i].payStatus == 1);
                         details.data[i].dname = rows[0].fName;
+                        details.data[i].meds = []
                         pool.query('select fName from patient where id = ?',[details.data[i].patientID], function(err, rows, fields){
                             if(err){
                                 console.log(err);
@@ -50,7 +51,6 @@ router.get('/', credentialCheck, (req, res) =>{
                                         return;
                                     }
                                     else{
-                                        details.data[i].meds = []
                                         for(let j = 0;j<rows.length;j++){
                                             details.data[i].meds.push({"id":rows[j].medicineId, "name":rows[j].mName,"quantity":rows[j].medOrderedQuantity,"price":rows[0].mPrice});
                                             if(i == details.data.length - 1 && j == rows.length - 1){
