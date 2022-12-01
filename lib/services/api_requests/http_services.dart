@@ -29,6 +29,7 @@ Future<LoginStatus> login(String inputUsername, String inputPassword, UserType u
     if(response.statusCode==201){
       usernameGlobal=inputUsername;
       passwordHashGlobal=hashedInputPassword;
+      userTypeGlobal=userTypeAsString;
       if(jsonDecode(response.body)['banned']??false){
         return LoginStatus.accountBanned;
       }
@@ -37,7 +38,7 @@ Future<LoginStatus> login(String inputUsername, String inputPassword, UserType u
         setStoredUname(usernameGlobal);
         setStoredUserType(userTypeGlobal);
         DateTime now=DateTime.now();
-        cookieHashGlobal=sha256.convert(utf8.encode(hashedInputPassword+userTypeGlobal+userTypeAsString+now.month.toString()+now.year.toString())).toString();
+        cookieHashGlobal=sha256.convert(utf8.encode(hashedInputPassword+userTypeGlobal+now.month.toString()+now.year.toString())).toString();
         setStoredLoginToken(cookieHashGlobal);
 
       }
@@ -172,4 +173,21 @@ Future<void> performSignUp(String firstName, String lastName, String email, Stri
     throw "Error";
   }
 
+}
+
+Future<dynamic> getAllPatientDetails() async{
+  try{
+    http.Response response=await http.get(Uri.parse("$backendURL/useraccounts"),headers: {
+      "uname":usernameGlobal,
+      "pwd":passwordHashGlobal,
+      "user_type":userTypeGlobal,
+      "login_type":"user",
+    },);
+    if(response.statusCode!=200){
+      throw "Error";
+    }
+    return jsonDecode(response.body)['data'];
+  }catch(e){
+    return Future.error(e);
+  }
 }
