@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:telehealth/widgets_basic/custom_text_field.dart';
 import 'package:telehealth/widgets_basic/filled_material_button.dart';
 import 'package:telehealth/widgets_composite/doctor_medicine_tile.dart';
 
@@ -17,6 +16,7 @@ class DoctorAppointmentCard extends StatelessWidget {
       title: Text(appointmentText),
       subtitle: Text(reason),
       initiallyExpanded: !upcomingAppointment,
+      expandedCrossAxisAlignment: CrossAxisAlignment.center,
       trailing: upcomingAppointment?Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -37,105 +37,98 @@ class DoctorAppointmentCard extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
-            height: 200,
-            child: Row(
-              children: [
-                const Expanded(
-                  child: CustomTextField(
-                    label: "Remarks",
-                    takeFullHeight: true,
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView(
-                      children: [
-                        DoctorMedicineTile(
-                          medicine: "Paracetamol",
-                          value: 1,
-                          plusOnPress: (){
+            height: 250,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 500
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView(
+                  children: [
+                    DoctorMedicineTile(
+                      medicine: "Paracetamol",
+                      value: 1,
+                      plusOnPress: (){
 
-                          },
-                          minusOnPress: (){
+                      },
+                      minusOnPress: (){
 
-                          },
-                        ),
-                        DoctorMedicineTile(
-                          medicine: "Paracetamol",
-                          value: 1,
-                          plusOnPress: (){
-
-                          },
-                          minusOnPress: (){
-
-                          },
-                        ),
-                        DoctorMedicineTile(
-                          medicine: "Paracetamol",
-                          value: 1,
-                          plusOnPress: (){
-
-                          },
-                          minusOnPress: (){
-
-                          },
-                        ),
-                        DoctorMedicineTile(
-                          medicine: "Paracetamol",
-                          value: 1,
-                          plusOnPress: (){
-
-                          },
-                          minusOnPress: (){
-
-                          },
-                        ),
-                        DoctorMedicineTile(
-                          medicine: "Paracetamol",
-                          value: 1,
-                          plusOnPress: (){
-
-                          },
-                          minusOnPress: (){
-
-                          },
-                        ),
-                        DoctorMedicineTile(
-                          medicine: "Paracetamol",
-                          value: 1,
-                          plusOnPress: (){
-
-                          },
-                          minusOnPress: (){
-
-                          },
-                        ),
-                        DoctorMedicineTile(
-                          medicine: "Paracetamol",
-                          value: 1,
-                          plusOnPress: (){
-
-                          },
-                          minusOnPress: (){
-
-                          },
-                        ),
-                        DoctorMedicineTile(
-                          medicine: "Paracetamol",
-                          value: 1,
-                          plusOnPress: (){
-
-                          },
-                          minusOnPress: (){
-
-                          },
-                        ),
-                      ],
+                      },
                     ),
-                  ),
-                )
-              ],
+                    DoctorMedicineTile(
+                      medicine: "Paracetamol",
+                      value: 1,
+                      plusOnPress: (){
+
+                      },
+                      minusOnPress: (){
+
+                      },
+                    ),
+                    DoctorMedicineTile(
+                      medicine: "Paracetamol",
+                      value: 1,
+                      plusOnPress: (){
+
+                      },
+                      minusOnPress: (){
+
+                      },
+                    ),
+                    DoctorMedicineTile(
+                      medicine: "Paracetamol",
+                      value: 1,
+                      plusOnPress: (){
+
+                      },
+                      minusOnPress: (){
+
+                      },
+                    ),
+                    DoctorMedicineTile(
+                      medicine: "Paracetamol",
+                      value: 1,
+                      plusOnPress: (){
+
+                      },
+                      minusOnPress: (){
+
+                      },
+                    ),
+                    DoctorMedicineTile(
+                      medicine: "Paracetamol",
+                      value: 1,
+                      plusOnPress: (){
+
+                      },
+                      minusOnPress: (){
+
+                      },
+                    ),
+                    DoctorMedicineTile(
+                      medicine: "Paracetamol",
+                      value: 1,
+                      plusOnPress: (){
+
+                      },
+                      minusOnPress: (){
+
+                      },
+                    ),
+                    DoctorMedicineTile(
+                      medicine: "Paracetamol",
+                      value: 1,
+                      plusOnPress: (){
+
+                      },
+                      minusOnPress: (){
+
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

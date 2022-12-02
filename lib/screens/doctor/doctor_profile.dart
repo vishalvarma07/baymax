@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../services/api_requests/http_services.dart';
 import '../../widgets_basic/custom_dropdown.dart';
 import '../../widgets_basic/custom_text_field.dart';
 import '../../widgets_basic/material_text_button.dart';
@@ -23,18 +24,48 @@ class _DoctorProfileState extends State<DoctorProfile> {
   final TextEditingController _lastName=TextEditingController();
   final TextEditingController _phoneNumber=TextEditingController();
   final TextEditingController _apartmentNumber=TextEditingController();
-  final TextEditingController _streetNumber=TextEditingController();
-  final TextEditingController _city=TextEditingController();
+  final TextEditingController _streetName=TextEditingController();
+  final TextEditingController _zipcode=TextEditingController();
   final TextEditingController _state=TextEditingController();
-  final TextEditingController _dateOfBirth=TextEditingController();
-  final TextEditingController _country=TextEditingController();
   String gender="male";
   final TextEditingController _password=TextEditingController();
   final TextEditingController _newPassword=TextEditingController();
   final TextEditingController _confirmNewPassword=TextEditingController();
 
+  bool _profileLoaded=false;
+  
+  
+  void loadDoctorProfile() async{
+    Map<String,dynamic> doctorProfile=await getDoctorProfile();
+    _firstName.text=doctorProfile['fName'];
+    _lastName.text=doctorProfile['lName'];
+    _phoneNumber.text=doctorProfile['phno']??"";
+    _apartmentNumber.text=doctorProfile['apartmentNo']??"";
+    _streetName.text=doctorProfile['streetName']??"";
+    _zipcode.text=doctorProfile['pincode']!=null?doctorProfile['pincode'].toString():"".toString();
+    _state.text=doctorProfile['state']??"";
+    // DateTime dobDateTime=DateTime.parse(doctorProfile['dob']);
+    // _dateOfBirth.text="${dobDateTime.year}/${dobDateTime.month<10?"0${dobDateTime.month}":dobDateTime.month}/${dobDateTime.day<10?"0${dobDateTime.day}":dobDateTime.day}";
+    gender=doctorProfile['gender']??"Male";
+
+    setState(() {
+      _profileLoaded=true;
+    });
+  }
+
+
+  @override
+  void initState() {
+    loadDoctorProfile();
+    super.initState();
+  }
+  
+
   @override
   Widget build(BuildContext context) {
+    if(!_profileLoaded){
+      return const Center(child: CircularProgressIndicator(),);
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView(
@@ -64,36 +95,17 @@ class _DoctorProfileState extends State<DoctorProfile> {
                 textInputType: TextInputType.phone,
                 takeFullWidth: false,
               ),
-              CustomTextField(
-                label: "Date of Birth",
-                controller: _dateOfBirth,
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.date_range_rounded),
-                  onPressed: () async{
-                    DateTime? dateOfBirth=await showDatePicker(
-                      context: context,
-                      initialDate: DateTime(DateTime.now().year),
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day),
-                    );
-                    if(dateOfBirth!=null){
-                      _dateOfBirth.text="${dateOfBirth.year}/${dateOfBirth.month<10?"0${dateOfBirth.month}":dateOfBirth.month}/${dateOfBirth.day<10?"0${dateOfBirth.day}":dateOfBirth.day}";
-                    }
-                  },
-                ),
-                textInputType: TextInputType.datetime,
-                hintText: "YYYY/MM/DD",
-                takeFullWidth: false,
-              ),
               CustomDropdown(
                 menuOptions: const {
-                  "Male":"male",
-                  "Female":"female",
-                  "Other":"other"
+                  "Male":"Male",
+                  "Female":"Female",
+                  "Other":"Other"
                 },
                 value: gender,
-                onChanged: (){
-
+                onChanged: (value){
+                  setState(() {
+                    gender=value;
+                  });
                 },
                 takeFullWidth: false,
               ),
@@ -172,27 +184,21 @@ class _DoctorProfileState extends State<DoctorProfile> {
                 takeFullWidth: false,
               ),
               CustomTextField(
-                controller: _streetNumber,
+                controller: _streetName,
                 label: "Street Number",
                 hintText: "503",
                 takeFullWidth: false,
               ),
               CustomTextField(
-                controller: _city,
-                label: "City",
-                hintText: "Dallas",
+                controller: _zipcode,
+                label: "Zipcode",
+                hintText: "75080",
                 takeFullWidth: false,
               ),
               CustomTextField(
                 controller: _state,
                 label: "State",
                 hintText: "Texas",
-                takeFullWidth: false,
-              ),
-              CustomTextField(
-                controller: _country,
-                label: "Country",
-                hintText: "United States",
                 takeFullWidth: false,
               ),
             ],
@@ -202,8 +208,14 @@ class _DoctorProfileState extends State<DoctorProfile> {
           ),
           MaterialTextButton(
             buttonName: "Save",
-            onPressed: (){
-
+            onPressed: () async{
+              try{
+                await sendDoctorProfile(_firstName.text,_lastName.text,_phoneNumber.text, gender, _apartmentNumber.text, _streetName.text, _zipcode.text, _state.text);
+                if(!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Profile Updated Successfully")));
+              }catch(e){
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Something went wrong! Check input values")));
+              }
             },
           ),
 

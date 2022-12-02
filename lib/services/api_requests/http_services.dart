@@ -239,3 +239,44 @@ Future<void> verifyPatientPayment(int paymentID) async{
     throw "Error";
   }
 }
+
+Future<dynamic> getDoctorProfile() async{
+  try{
+    http.Response response=await http.get(Uri.parse("$backendURL/doctorprofile"),headers: {
+      "uname":usernameGlobal,
+      "pwd":passwordHashGlobal,
+      "user_type":userTypeGlobal,
+      "login_type":"user",
+    });
+
+    if(response.statusCode!=200){
+      throw "Error";
+    }
+
+    return jsonDecode(response.body)['data'][0];
+  }catch(e){
+    return Future.error(e);
+  }
+}
+
+Future<void> sendDoctorProfile(String firstName, String lastName, String phoneNumber, String gender, String apartmentNumber, String streetName, String zipcode, String state) async{
+  http.Response response=await http.post(Uri.parse("$backendURL/doctorprofile"),headers: {
+    "uname":usernameGlobal,
+    "pwd":passwordHashGlobal,
+    "user_type":userTypeGlobal,
+    "login_type":"user",
+  },body: {
+    "fName": firstName,
+    "lName": lastName,
+    "phno": phoneNumber,
+    "gender": gender,
+    "apartmentNo": apartmentNumber,
+    "streetName": streetName,
+    "pincode": zipcode,
+    "state": state,
+  });
+  print(response.statusCode);
+  if(response.statusCode!=200){
+    throw "Error";
+  }
+}
