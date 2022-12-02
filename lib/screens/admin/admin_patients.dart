@@ -51,9 +51,16 @@ class _AdminPatientsState extends State<AdminPatients> {
                       ),
                       TextButton(
                         child: const Text("OK"),
-                        onPressed: (){
-                          //TODO Ban/Unban user here
-                          Navigator.pop(context);
+                        onPressed: () async{
+                          try{
+                            await changePatientBanStatus(snapshot.data![index]['uname'], userBanned?"unban":"ban");
+                            if(!mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("User ban status changed successfully")));
+                            Navigator.pop(context);
+                            setState(() {});
+                          }catch(e){
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to change user ban status")));
+                          }
                         },
                       ),
 

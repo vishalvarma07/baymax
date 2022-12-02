@@ -77,12 +77,12 @@ class _DoctorProfileState extends State<DoctorProfile> {
                       lastDate: DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day),
                     );
                     if(dateOfBirth!=null){
-                      _dateOfBirth.text="${dateOfBirth.month}/${dateOfBirth.day}/${dateOfBirth.year}";
+                      _dateOfBirth.text="${dateOfBirth.year}/${dateOfBirth.month<10?"0${dateOfBirth.month}":dateOfBirth.month}/${dateOfBirth.day<10?"0${dateOfBirth.day}":dateOfBirth.day}";
                     }
                   },
                 ),
                 textInputType: TextInputType.datetime,
-                hintText: "MM/DD/YYYY",
+                hintText: "YYYY/MM/DD",
                 takeFullWidth: false,
               ),
               CustomDropdown(

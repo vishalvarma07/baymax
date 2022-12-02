@@ -191,3 +191,51 @@ Future<dynamic> getAllPatientDetails() async{
     return Future.error(e);
   }
 }
+
+Future<void> changePatientBanStatus(String uname, String banStatus) async{
+  http.Response response=await http.post(Uri.parse("$backendURL/useraccounts"),headers: {
+    "uname":usernameGlobal,
+    "pwd":passwordHashGlobal,
+    "user_type":"admin",
+    "login_type":"user",
+  },body: {
+    "banstatus":banStatus,
+    "uname":uname,
+  });
+  if(response.statusCode!=200){
+    throw "Error";
+  }
+}
+
+Future<dynamic> getPatientPayments() async{
+  try{
+    http.Response response=await http.get(Uri.parse("$backendURL/verifypayment"),headers: {
+      "uname":usernameGlobal,
+      "pwd":passwordHashGlobal,
+      "user_type":userTypeGlobal,
+      "login_type":"user",
+    },);
+    if(response.statusCode!=200){
+      throw "Error";
+    }
+    return jsonDecode(response.body)['data'];
+
+  }catch(e){
+    return Future.error(e);
+  }
+}
+
+Future<void> verifyPatientPayment(int paymentID) async{
+  http.Response response=await http.post(Uri.parse("$backendURL/verifypayment"),headers: {
+    "uname":usernameGlobal,
+    "pwd":passwordHashGlobal,
+    "user_type":userTypeGlobal,
+    "login_type":"user",
+  },body: {
+    "paymentId":paymentID.toString()
+  }
+  );
+  if(response.statusCode!=200){
+    throw "Error";
+  }
+}
