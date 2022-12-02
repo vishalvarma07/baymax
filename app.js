@@ -4,16 +4,6 @@ const bodyParser = require('body-parser');
 const frontendport = 52117;
 const app = express();
 const cors=require('cors');
-
-//cors
-// app.use(function(req, res, next) {
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-//     res.setHeader('Access-Control-Allow-Credentials', true);
-//     next();
-// });
-
   
 app.use(cors());
 
@@ -33,6 +23,7 @@ doctorProfileRouter = require('./routes/doctorProfile');
 passwordChangeRouter = require('./routes/passwordChange');
 verifypayment = require('./routes/verifypayment');
 userAccounts = require('./routes/useraccounts');
+reserveAppointments = require('./routes/reserveAppointments');
 
 //Routes
 app.use('/signup', signupRouter);
@@ -46,6 +37,7 @@ app.use('/doctorprofile', doctorProfileRouter);
 app.use('/passwordchange', passwordChangeRouter);
 app.use('/verifypayment', verifypayment);
 app.use('/useraccounts', userAccounts);
+app.use('/reserve', reserveAppointments);
 
 app.listen(frontendport, () => {
     console.log("port 52117 accessed")

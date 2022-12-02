@@ -11,10 +11,12 @@ router.post('/', (req, res) => {
             console.log(err);
             details.status = 'failed';
             res.status(404).json(details);
+            return;
         }
         else{
             details.status = 'successful';
             res.status(200).json(details);
+            return;
         }
     })
 })

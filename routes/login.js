@@ -14,10 +14,12 @@ router.post('/', (req, res) => {
                 console.log(err);
                 details.status = 'failed'
                 res.status(404).json(details);
+                return;
             }
             if(rows.length == 0){
                 details.status = 'failed';
                 res.status(401).json(details);
+                return;
             }
             else{
                 if(rows[0].pwd == loginDetails.pwd){
@@ -25,10 +27,12 @@ router.post('/', (req, res) => {
                     details.status = 'successful';
                     details.banned = Boolean(rows[0].ban);
                     res.status(201).json(details);
+                    return;
                 }
                 else{
                     details.status = 'failed';
                     res.status(401).json(details);
+                    return;
                 }
             }
         })
@@ -39,10 +43,12 @@ router.post('/', (req, res) => {
                 console.log(err);
                 details.status = 'failed';
                 res.status(404).json(details);
+                return;
             }
             if(rows.length == 0){
                 details.status = 'failed';
                 res.status(401).json(details);
+                return;
             }
             else{
                 const currentYear = String(new Date().getFullYear());
@@ -56,10 +62,12 @@ router.post('/', (req, res) => {
                     console.log('login successful');
                     details.banned = Boolean(rows[0].ban);
                     res.status(201).json(details);
+                    return;
                 }
                 else{
                     details.status = 'failed';
                     res.status(401).json(details);
+                    return;
                 }
             }
         })

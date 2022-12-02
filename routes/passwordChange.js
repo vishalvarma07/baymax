@@ -13,11 +13,13 @@ router.post('/', credentialCheck, (req, res) => {
             console.log(err);
             details.status = 'failed';
             res.status(404).json(details);
+            return;
         }
         if(rows.length == 0){
             console.log(err);
             details.status = 'failed';
             res.status(401).json(details);
+            return;
         }
         else{
             if(userPassword.old == rows[0].pwd){
@@ -26,16 +28,19 @@ router.post('/', credentialCheck, (req, res) => {
                         console.log(err);
                         details.status = 'failed';
                         res.status(404).json(details);
+                        return;
                     }
                     else{
                         details.status = 'successful';
                         res.status(200).json(details);
+                        return;
                     }
                 })
             }
             else{
                 details.status = 'failed';
                 res.status(401).json(details);
+                return;
             }
         }
     })

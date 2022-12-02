@@ -18,6 +18,7 @@ router.get('/', credentialCheck, (req, res) => {
             console.log(err);
             details.status = 'failed';
             res.status(404).json(details);
+            return;
         }
         details.status = 'successful';
         details.data = rows;
@@ -35,6 +36,7 @@ router.post('/', credentialCheck, (req, res) => {
                 console.log(err);
                 details.status = 'failed';
                 res.status(404).json(details);
+                return;
             }
             details.status = 'successful';
             res.status(200).json(details);

@@ -2,7 +2,6 @@ let express = require('express');
 let router = express.Router();
 let pool = require('../resources');
 
-const { route } = require('./dashboard');
 let credentialCheck = require('../services/credentialCheck');
 const getPatientid = require('../services/getPatientid');
 const getDoctorid = require('../services/getDoctorid');
