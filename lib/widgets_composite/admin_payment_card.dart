@@ -86,7 +86,7 @@ class AdminPaymentCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FilledMaterialButton(
-                onPressed: !feePaid?null:feeVerified?() async{
+                onPressed: !feePaid?null:!feeVerified?() async{
                   try{
                     await verifyPatientPayment(paymentID);
                     onVerifyComplete((){});
