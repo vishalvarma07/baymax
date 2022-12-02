@@ -6,7 +6,7 @@ let credentialCheck = require('../services/credentialCheck');
 router.get('/', credentialCheck, (req, res) =>{
     let adminDetails = req.headers;
     let details = {};
-    pool.query('select * from payment where paystatus = 0 or verifiedBy = null;', function(err, rows, fields){
+    pool.query('select * from payment where verifiedBy IS NULL;', function(err, rows, fields){
         if(err){
             console.log(err);
             details.status = 'failed';
@@ -30,7 +30,7 @@ router.get('/', credentialCheck, (req, res) =>{
                         return;
                     }
                     else{
-                        details.data[i].adminverified = (details.data[i].verifiedBy == null);
+                        details.data[i].adminverified = (details.data[i].verifiedBy != null);
                         details.data[i].payStatus = (details.data[i].payStatus == 1);
                         details.data[i].dname = rows[0].fName;
                         details.data[i].meds = []
