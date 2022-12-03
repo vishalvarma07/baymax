@@ -3,39 +3,58 @@ let router = express.Router();
 let pool = require('../resources');
 
 let credentialCheck = require('../services/credentialCheck');
-const getPatientid = require('../services/getPatientid');
-const getDoctorid = require('../services/getDoctorid');
 
 router.get('/', credentialCheck, (req, res) => {
     let dashboardDetails = {};
     console.log(req.headers.uname);
-    pool.query('select * from patient where uname = ?',[req.headers.uname], function(err, rows, fields) {
+    pool.query('select * from doctor where uname = ?',[req.headers.uname], function(err, rows, fields) {
         if(err){
             console.log(err);
             dashboardDetails.status = 'failed';
             res.status(400).json(dashboardDetails);
+            return;
         }
-        pool.query('select * from ongoingAppointments where id = ?',[rows[0].id], function(err, rows, fields) {
+        console.log(rows);
+        dashboardDetails.dName = rows[0].fName,
+        dashboardDetails.rating = rows[0].rating;
+        dashboardDetails.ongoing = []
+        dashboardDetails.meds = []
+        pool.query('select * from ongoingAppointments where doctorId = ?',[rows[0].id], function(err, rows, fields) {
             if(err){
                 console.log(err);
                 dashboardDetails.status = 'failed';
-                res.status(400).json(dashboardDetails);
+                res.status(404).json(dashboardDetails);
+                return;
             }
-            if(rows.length == 0){
+            else if(rows.length == 0){
                 dashboardDetails.status = 'successful';
-                dashboardDetails.data = [];
+                dashboardDetails.ongoing = [];
             }
             else{
                 dashboardDetails.status = 'successful';
-                dashboardDetails.data = rows;
+                dashboardDetails.ongoing = rows;
             }
             pool.query('select * from medicines where mQuantity > 0', function(err, rows, fields) {
                 if(err){
                     dashboardDetails.status = 'failed';
                     res.status(404).json(dashboardDetails);
+                    return;
                 }
-                dashboardDetails.meds = rows;
-                res.status(200).json(dashboardDetails);
+                else{
+                    dashboardDetails.meds = rows;
+                    pool.query('select * from upcomingappointments where doctorId = ?',[rows[0].id], function(err, rows, fields){
+                        if(err){
+                            dashboardDetails.status = 'failed';
+                            res.status(404).json(dashboardDetails);
+                            return;
+                        }
+                        else{
+                            dashboardDetails.upcoming = rows;
+                            dashboardDetails.status = 'successful';
+                            res.status(200).json(dashboardDetails);
+                        }
+                    })
+                }
             });
         })
     })
@@ -95,8 +114,7 @@ router.post('/', credentialCheck, (req, res) => {
                 })
             }
         })
-    })
-    
+    }) 
 })
 
 router.delete('/', credentialCheck, (req, res) => {

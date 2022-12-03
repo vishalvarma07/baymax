@@ -15,7 +15,7 @@ router.get('/', credentialCheck, (req, res) => {
         else{
             details.data = rows;
             for(let i=0;i<rows.length;i++){
-                pool.query('SELECT * FROM SLOT WHERE slotId NOT IN (SELECT pay.slotId FROM PAYMENT pay, DOCTOR d WHERE d.id=pay.doctorId and d.id = ? and date(pay.appointmentDate) = date(now()) AND slotId > hour(now()))', [details.data[i].id], function(err, rows, fields){
+                pool.query('SELECT * FROM SLOT WHERE slotId NOT IN (SELECT r.slotId FROM reservations r, payment pay, DOCTOR d WHERE d.id=pay.doctorId and d.id=2 and date(pay.appointmentDate) = date(now()) AND r.slotId > hour(now()))', [details.data[i].id], function(err, rows, fields){
                     if(err){
                         console.log(err);
                         details.status = 'failed';
@@ -24,7 +24,7 @@ router.get('/', credentialCheck, (req, res) => {
                     }
                     else{
                         details.data[i].today = rows.map(Object.values).flat(1);
-                        pool.query('SELECT * FROM SLOT WHERE slotId NOT IN (SELECT pay.slotId FROM PAYMENT pay, DOCTOR d WHERE d.id=pay.doctorId and d.id=2 and date(pay.appointmentDate) = DATE_ADD(now(), INTERVAL 1 DAY))', [details.data[i].id], function(err, rows, fields){
+                        pool.query('SELECT * FROM SLOT WHERE slotId NOT IN (SELECT r.slotId FROM reservations r, PAYMENT pay, DOCTOR d WHERE d.id=pay.doctorId and d.id=2 and date(pay.appointmentDate) = DATE_ADD(now(), INTERVAL 1 DAY))', [details.data[i].id], function(err, rows, fields){
                             if(err){
                                 console.log(err);
                                 details.status = 'failed';
