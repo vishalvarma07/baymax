@@ -31,7 +31,7 @@ router.post('/', credentialCheck, (req, res) => {
     let userDetails = req.body;
     let details = {}
     if(validatePhoneNumber(userDetails.phno)){
-        pool.query('update doctor set fName = ?, lName = ?, phno = ?, gender = ?, apartmentNo = ?, streetName = ?, state = ?, pincode = ? where uname = ?',[userDetails.fName, userDetails.lName, userDetails.phno, userDetails.gender, userDetails.apartmentNo, userDetails.streetName, userDetails.state, userDetails.pincode, userHeaders.uname], function(err){
+        pool.query('update doctor set fName = ?, lName = ?, phno = ?, gender = ? where uname = ?',[userDetails.fName, userDetails.lName, userDetails.phno, userDetails.gender, userDetails.apartmentNo, userDetails.streetName, userDetails.state, userDetails.pincode, userHeaders.uname], function(err){
             if(err){
                 console.log(err);
                 details.status = 'failed';

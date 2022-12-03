@@ -47,4 +47,10 @@ router.get('/', credentialCheck, (req, res) => {
     })
 })
 
+router.post('/', credentialCheck, (req, res) => {
+    let appointmentDetails = req.body;
+    let details = {}
+    pool.query('insert into')
+})
+
 module.exports = router;
