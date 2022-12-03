@@ -14,7 +14,6 @@ router.get('/', credentialCheck, (req, res) => {
             res.status(400).json(dashboardDetails);
             return;
         }
-        console.log(rows);
         dashboardDetails.dName = rows[0].fName,
         dashboardDetails.rating = rows[0].rating;
         dashboardDetails.ongoing = []
