@@ -146,7 +146,7 @@ Future<void> changePassword(String oldPassword, String newPassword) async{
   http.Response response=await http.post(Uri.parse("$backendURL/passwordchange"),headers: {
     "uname":usernameGlobal,
     "pwd":passwordHashGlobal,
-    "user_type":"patient",
+    "user_type":userTypeGlobal,
     "login_type":"user",
   },body: {
     "old":hashedOldPassword,
@@ -207,7 +207,7 @@ Future<void> changePatientBanStatus(String uname, String banStatus) async{
   }
 }
 
-Future<dynamic> getPatientPayments() async{
+Future<dynamic> getAdminPatientPayments() async{
   try{
     http.Response response=await http.get(Uri.parse("$backendURL/verifypayment"),headers: {
       "uname":usernameGlobal,
@@ -259,7 +259,7 @@ Future<dynamic> getDoctorProfile() async{
   }
 }
 
-Future<void> sendDoctorProfile(String firstName, String lastName, String phoneNumber, String gender, String apartmentNumber, String streetName, String zipcode, String state) async{
+Future<void> sendDoctorProfile(String firstName, String lastName, String phoneNumber, String gender) async{
   http.Response response=await http.post(Uri.parse("$backendURL/doctorprofile"),headers: {
     "uname":usernameGlobal,
     "pwd":passwordHashGlobal,
@@ -270,13 +270,94 @@ Future<void> sendDoctorProfile(String firstName, String lastName, String phoneNu
     "lName": lastName,
     "phno": phoneNumber,
     "gender": gender,
-    "apartmentNo": apartmentNumber,
-    "streetName": streetName,
-    "pincode": zipcode,
-    "state": state,
   });
-  print(response.statusCode);
   if(response.statusCode!=200){
     throw "Error";
+  }
+}
+
+Future<dynamic> getPatientPayments() async{
+  try{
+    http.Response response=await http.get(Uri.parse("$backendURL/payments"),headers: {
+      "uname":usernameGlobal,
+      "pwd":passwordHashGlobal,
+      "user_type":"patient",
+      "login_type":"user",
+    });
+    if(response.statusCode!=200){
+      throw "Error";
+    }
+    return jsonDecode(response.body);
+
+  }catch(e){
+    return Future.error(e);
+  }
+}
+
+Future<void> completePatientPayment(int paymentID) async{
+  http.Response response=await http.post(Uri.parse("$backendURL/payments"),headers: {
+    "uname":usernameGlobal,
+    "pwd":passwordHashGlobal,
+    "user_type":userTypeGlobal,
+    "login_type":"user",
+  },body: {
+    "paymentId": paymentID.toString(),
+    "payDate": DateTime.now().toIso8601String()
+  });
+  if(response.statusCode!=200){
+    throw "Error";
+  }
+}
+
+Future<dynamic> getDoctorAppointments() async{
+  try{
+    http.Response response=await http.get(Uri.parse("$backendURL/reserve"),headers: {
+      "uname":usernameGlobal,
+      "pwd":passwordHashGlobal,
+      "user_type":"patient",
+      "login_type":"user",
+    });
+    if(response.statusCode!=200){
+      throw "Error";
+    }
+    return jsonDecode(response.body)['data'];
+
+  }catch(e){
+    return Future.error(e);
+  }
+}
+
+Future<void> reserveDoctorAppointment(int doctorID, int slotID, DateTime appointmentDate, String reason) async{
+  http.Response response=await http.post(Uri.parse("$backendURL/reserve"),headers: {
+    "uname":usernameGlobal,
+    "pwd":passwordHashGlobal,
+    "user_type":userTypeGlobal,
+    "login_type":"user",
+  },body: {
+    "doctorId": doctorID.toString(),
+    "slotId": slotID.toString(),
+    "appointmentDate": appointmentDate.toIso8601String(),
+    "reservationDesc": reason,
+  });
+  if(response.statusCode!=200){
+    throw "Error";
+  }
+}
+
+Future<dynamic> getDoctorDashboardContent() async{
+  try{
+    http.Response response=await http.get(Uri.parse("$backendURL/doctordashboard"),headers: {
+      "uname":usernameGlobal,
+      "pwd":passwordHashGlobal,
+      "user_type":userTypeGlobal,
+      "login_type":"user",
+    });
+    if(response.statusCode!=200){
+      throw "Error";
+    }
+    return jsonDecode(response.body);
+
+  }catch(e){
+    return Future.error(e);
   }
 }

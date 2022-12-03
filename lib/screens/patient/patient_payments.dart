@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:telehealth/widgets_basic/empty_screen_placeholder.dart';
-import 'package:telehealth/widgets_basic/page_subheading.dart';
+import 'package:telehealth/services/api_requests/http_services.dart';
 import 'package:telehealth/widgets_composite/patient_payment_card.dart';
 
-class PatientPayments extends StatelessWidget {
+class PatientPayments extends StatefulWidget {
   const PatientPayments({Key? key}) : super(key: key);
 
   @override
+  State<PatientPayments> createState() => _PatientPaymentsState();
+}
+
+class _PatientPaymentsState extends State<PatientPayments> {
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      builder: (BuildContext context, AsyncSnapshot snapshot){
+      future: getPatientPayments(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
         if(snapshot.connectionState==ConnectionState.waiting){
           return const Center(
             child: CircularProgressIndicator(),
@@ -25,54 +29,26 @@ class PatientPayments extends StatelessWidget {
         //   );
         // }
         return ListView.builder(
-          itemCount: 10,
+          itemCount: snapshot.data!.length,
           itemBuilder: (BuildContext context, int index){
             return PatientPaymentCard(
-              onConsultationFeePayment: (){
-                showDialog(
-                  context: context,
-                  builder: (context)=>AlertDialog(
-                    title: Text("Confirm?"),
-                    content: Text("Do you want to confirm your payment of \$500?"),
-                    actions: [
-                      TextButton(
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Cancel"),
-                      ),
-                      TextButton(
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                        child: const Text("OK"),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              onMedicineFeePayment: index%3==0?null:(){
-                showDialog(
-                  context: context,
-                  builder: (context)=>AlertDialog(
-                    title: Text("Confirm?"),
-                    content: Text("Do you want to confirm your medicine purchase worth \$500?"),
-                    actions: [
-                      TextButton(
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Cancel"),
-                      ),
-                      TextButton(
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                        child: const Text("OK"),
-                      ),
-                    ],
-                  ),
-                );
+              consultationFee: snapshot.data![index]['consultationFee'],
+              appointmentDate: DateTime.parse(snapshot.data![index]['appointmentDate']),
+              slotID: snapshot.data![index]['slotId'],
+              doctorName: snapshot.data![index]['dName'],
+              meds: snapshot.data![index]['meds'],
+              paid: snapshot.data![index]['payStatus'],
+              verified: snapshot.data![index]['verifiedBy'],
+              onFeePayment: () async{
+                try{
+                  int paymentID=snapshot.data![index]['id'];
+                  await completePatientPayment(paymentID);
+                  if(!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Payment Complete")));
+                  setState(() {});
+                }catch(e){
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to make payment")));
+                }
               },
             );
           },
@@ -81,3 +57,4 @@ class PatientPayments extends StatelessWidget {
     );
   }
 }
+

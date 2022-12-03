@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/api_requests/http_services.dart';
+import '../../services/shared_prefs.dart';
 import '../../widgets_basic/custom_dropdown.dart';
 import '../../widgets_basic/custom_text_field.dart';
 import '../../widgets_basic/material_text_button.dart';
@@ -23,10 +24,6 @@ class _DoctorProfileState extends State<DoctorProfile> {
   final TextEditingController _firstName=TextEditingController();
   final TextEditingController _lastName=TextEditingController();
   final TextEditingController _phoneNumber=TextEditingController();
-  final TextEditingController _apartmentNumber=TextEditingController();
-  final TextEditingController _streetName=TextEditingController();
-  final TextEditingController _zipcode=TextEditingController();
-  final TextEditingController _state=TextEditingController();
   String gender="male";
   final TextEditingController _password=TextEditingController();
   final TextEditingController _newPassword=TextEditingController();
@@ -40,10 +37,6 @@ class _DoctorProfileState extends State<DoctorProfile> {
     _firstName.text=doctorProfile['fName'];
     _lastName.text=doctorProfile['lName'];
     _phoneNumber.text=doctorProfile['phno']??"";
-    _apartmentNumber.text=doctorProfile['apartmentNo']??"";
-    _streetName.text=doctorProfile['streetName']??"";
-    _zipcode.text=doctorProfile['pincode']!=null?doctorProfile['pincode'].toString():"".toString();
-    _state.text=doctorProfile['state']??"";
     // DateTime dobDateTime=DateTime.parse(doctorProfile['dob']);
     // _dateOfBirth.text="${dobDateTime.year}/${dobDateTime.month<10?"0${dobDateTime.month}":dobDateTime.month}/${dobDateTime.day<10?"0${dobDateTime.day}":dobDateTime.day}";
     gender=doctorProfile['gender']??"Male";
@@ -155,9 +148,28 @@ class _DoctorProfileState extends State<DoctorProfile> {
                             child: const Text("Cancel"),
                           ),
                           TextButton(
-                            onPressed: (){
-                              Navigator.pop(context);
-                              Navigator.pop(homeScreenContext);
+                            onPressed: () async{
+                              if(_confirmNewPassword.text!=_newPassword.text){
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("New password and Confirm New password fields should match")));
+                                return;
+                              }
+                              if(_newPassword.text.length<8){
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("New password must be at least 8 characters long")));
+                                return;
+                              }
+                              //Change password and result
+                              try{
+                                await changePassword(_password.text, _newPassword.text);
+                                if(!mounted){
+                                  return;
+                                }
+                                clearStoredLoginData();
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password Changed Successfully")));
+                                Navigator.pop(context);
+                                Navigator.pop(homeScreenContext);
+                              }catch(e){
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("An unknown error occurred! Check your old password")));
+                              }
                             },
                             child: const Text("Confirm"),
                           ),
@@ -172,37 +184,6 @@ class _DoctorProfileState extends State<DoctorProfile> {
           const SizedBox(
             height: 8,
           ),
-          const PageSubheading(subheadingName: "Address"),
-          Wrap(
-            spacing: 24,
-            runSpacing: 8,
-            children: [
-              CustomTextField(
-                controller: _apartmentNumber,
-                label: "Apartment Number",
-                hintText: "137",
-                takeFullWidth: false,
-              ),
-              CustomTextField(
-                controller: _streetName,
-                label: "Street Number",
-                hintText: "503",
-                takeFullWidth: false,
-              ),
-              CustomTextField(
-                controller: _zipcode,
-                label: "Zipcode",
-                hintText: "75080",
-                takeFullWidth: false,
-              ),
-              CustomTextField(
-                controller: _state,
-                label: "State",
-                hintText: "Texas",
-                takeFullWidth: false,
-              ),
-            ],
-          ),
           const SizedBox(
             height: 8,
           ),
@@ -210,7 +191,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
             buttonName: "Save",
             onPressed: () async{
               try{
-                await sendDoctorProfile(_firstName.text,_lastName.text,_phoneNumber.text, gender, _apartmentNumber.text, _streetName.text, _zipcode.text, _state.text);
+                await sendDoctorProfile(_firstName.text,_lastName.text,_phoneNumber.text, gender,);
                 if(!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Profile Updated Successfully")));
               }catch(e){

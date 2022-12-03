@@ -3,7 +3,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../widgets_basic/welcome_card.dart';
 
 class DoctorRatingCard extends StatelessWidget {
-  const DoctorRatingCard({Key? key}) : super(key: key);
+  final String doctorName;
+  final double rating;
+  const DoctorRatingCard({Key? key, required this.doctorName, required this.rating}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,7 @@ class DoctorRatingCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Flexible(
-            child: Text("Welcome Dr.XYZ!",style: TextStyle(
+            child: Text("Welcome Dr.$doctorName!",style: const TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w400,
                 color: Colors.white
@@ -23,7 +25,7 @@ class DoctorRatingCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Flexible(
-                child: Text("Your consultation is rated at 3.6 out of 5",style: const TextStyle(
+                child: Text("Your consultation is rated at $rating out of 5",style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w300,
                     color: Colors.white
@@ -42,7 +44,7 @@ class DoctorRatingCard extends StatelessWidget {
             ),
             ignoreGestures: true,
             allowHalfRating: true,
-            initialRating: 3.4,
+            initialRating: rating,
             onRatingUpdate: (value){
 
             },

@@ -14,7 +14,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getPatientPayments(),
+      future: getAdminPatientPayments(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
         if(snapshot.connectionState==ConnectionState.waiting){
           return const Center(child: CircularProgressIndicator(),);
