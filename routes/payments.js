@@ -29,7 +29,7 @@ router.get('/', credentialCheck, (req, res) => {
                     pool.query('select fName from doctor where id = ?',[payments[i].doctorId], function(err, rows, fields){
                         if(err){
                             console.log(err);
-                            details.status = 'failed';
+                            payments.status = 'failed';
                             res.status(404).json(payments);
                             return;
                         }
@@ -38,7 +38,7 @@ router.get('/', credentialCheck, (req, res) => {
                             pool.query('select * from med_details where paymentId = ?',[payments[i].id], function(err, rows, fields){
                                 if(err){
                                     console.log(err);
-                                    details.status = 'failed';
+                                    payments.status = 'failed';
                                     res.status(404).json(payments);
                                     return;
                                 }
