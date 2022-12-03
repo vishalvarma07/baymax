@@ -20,9 +20,49 @@ router.get('/', credentialCheck, (req, res) => {
                 res.status(404).json(payments);
             }
             else{
-                payments.status = 'successful';
-                payments.data = rows;
-                res.status(200).json(payments);
+                payments = rows;
+                //console.log(payments);
+                for(let i =0;i<payments.length;i++){
+                    payments[i].meds = []
+                    payments[i].verifiedBy = (payments[i].verifiedBy != null)
+                    payments[i].payStatus = payments[i].payStatus == 1
+                    pool.query('select fName from doctor where id = ?',[payments[i].doctorId], function(err, rows, fields){
+                        if(err){
+                            console.log(err);
+                            details.status = 'failed';
+                            res.status(404).json(payments);
+                            return;
+                        }
+                        else{
+                            payments[i].dName = rows[0].fName;
+                            pool.query('select * from med_details where paymentId = ?',[payments[i].id], function(err, rows, fields){
+                                if(err){
+                                    console.log(err);
+                                    details.status = 'failed';
+                                    res.status(404).json(payments);
+                                    return;
+                                }
+                                else{
+                                    console.log(rows);
+                                    for(let j = 0;j<rows.length;j++){
+                                        payments[i].meds.push({"id":rows[j].medicineId, "name":rows[j].mName,"quantity":rows[j].medOrderedQuantity,"price":rows[0].mPrice});
+                                        if(i == payments.length - 1 && j == rows.length - 1){
+                                            payments.status = 'successful';
+                                            res.status(200).json(payments);
+                                            return;
+                                        }
+                                    }
+                                    if(i == payments.length - 1){
+                                        payments.status = 'successful';
+                                        res.status(200).json(payments);
+                                        return;
+                                    }
+                                }
+                            })
+                        }
+                    })
+                    //console.log(payments);
+                }
             }
         })
     })

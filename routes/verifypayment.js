@@ -6,7 +6,7 @@ let credentialCheck = require('../services/credentialCheck');
 router.get('/', credentialCheck, (req, res) =>{
     let adminDetails = req.headers;
     let details = {};
-    pool.query('select * from payment where verifiedBy IS NULL;', function(err, rows, fields){
+    pool.query('select * from payment where paystatus = 0 or verifiedBy = null;', function(err, rows, fields){
         if(err){
             console.log(err);
             details.status = 'failed';
@@ -58,6 +58,11 @@ router.get('/', credentialCheck, (req, res) =>{
                                                 res.status(200).json(details);
                                                 return;
                                             }
+                                        }
+                                        if(i == details.data.length - 1){
+                                            details.status = 'successful';
+                                            res.status(200).json(details);
+                                            return;
                                         }
                                     }
                                 })
