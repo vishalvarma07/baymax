@@ -40,7 +40,6 @@ router.get('/', credentialCheck, (req, res) => {
                     return;
                 }
                 else{
-                    console.log(rows[0].id);
                     dashboardDetails.meds = rows;
                     pool.query('select * from upcomingappointments where doctorId = ?',[doctorId], function(err, rows, fields){
                         if(err){
@@ -49,7 +48,6 @@ router.get('/', credentialCheck, (req, res) => {
                             return;
                         }
                         else{
-                            console.log(rows);
                             dashboardDetails.upcoming = rows;
                             dashboardDetails.status = 'successful';
                             res.status(200).json(dashboardDetails);
@@ -83,8 +81,9 @@ router.post('/', credentialCheck, (req, res) => {
                     return;
                 }
                 else{
+                    let appointmentDate = rows[0].appointmentDate;
                     if(rows.length != 0){
-                        pool.query('INSERT INTO PAYMENT (doctorId,appointmentId,appointmentDate,consultationFee,slotId,payStatus) VALUES (?, ?, ?, 50, ?, 0)',[rows[0].doctorId, rows[0].appointmentId, info.appointmentDate, rows[0].slotId], function(err) {
+                        pool.query('INSERT INTO PAYMENT (doctorId,appointmentId,appointmentDate,consultationFee,slotId,payStatus) VALUES (?, ?, ?, 50, ?, 0)',[rows[0].doctorId, rows[0].appointmentId, appointmentDate, rows[0].slotId], function(err) {
                             if(err){
                                 console.log(err);
                                 details.status = 'failed';
@@ -92,7 +91,7 @@ router.post('/', credentialCheck, (req, res) => {
                                 return;
                             }
                             else{
-                                pool.query('delete from reservations where appointmentId = ?',[rows[0].appointmentId], function(err) {
+                                pool.query('delete from reservations where appointmentId = ?',[parseInt(rows[0].appointmentId)], function(err) {
                                     if(err){
                                         console.log(err);
                                         details.status = 'failed';
@@ -102,7 +101,7 @@ router.post('/', credentialCheck, (req, res) => {
                                     else{
                                         pool.query('select id, appointmentId from payment where doctorId = ? and appointmentId = ?',[rows[0].doctorId, rows[0].appointmentId], function(err, rows, fields){
                                             for(let i=0; i< info.meds.length;i++){
-                                                pool.query('INSERT INTO MEDORDER (medicineId, paymentId, medOrderedQuantity, orderDate) VALUES (?,?, ?, ?)',[info.meds[i].id, rows[0].id, info.meds[i].quantity, info.appointmentDate], function(err){
+                                                pool.query('INSERT INTO MEDORDER (medicineId, paymentId, medOrderedQuantity, orderDate) VALUES (?,?, ?, ?)',[info.meds[i].id, rows[0].id, info.meds[i].count, appointmentDate], function(err){
                                                     if(err){
                                                         console.log(err);
                                                         details.status = 'failed';
@@ -110,7 +109,7 @@ router.post('/', credentialCheck, (req, res) => {
                                                         return;
                                                     }
                                                     else{
-                                                        pool.query(`update medicines set mQuantity = mQuantity - ${info.meds[i].quantity} where id = ${info.meds[i].id}`, function(err) {
+                                                        pool.query(`update medicines set mQuantity = mQuantity - ${info.meds[i].count} where id = ${info.meds[i].id}`, function(err) {
                                                             if(err){
                                                                 console.log(err);
                                                                 details.status = 'failed';
@@ -118,9 +117,11 @@ router.post('/', credentialCheck, (req, res) => {
                                                                 return;
                                                             }
                                                             else{
-                                                                details.status = 'successful';
-                                                                res.status(200).json(details);
-                                                                return;
+                                                                if(i == info.meds.length-1){
+                                                                    details.status = 'successful';
+                                                                    res.status(200).json(details);
+                                                                    return;
+                                                                }
                                                             }
                                                         })
                                                     }
@@ -131,6 +132,11 @@ router.post('/', credentialCheck, (req, res) => {
                                 })
                             }
                         })
+                    }
+                    else{
+                        details.status = 'failed';
+                        res.status(404).json(details);
+                        return;
                     }
                 }
             })
