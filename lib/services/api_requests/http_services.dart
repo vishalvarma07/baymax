@@ -361,3 +361,32 @@ Future<dynamic> getDoctorDashboardContent() async{
     return Future.error(e);
   }
 }
+
+Future<void> cancelAppointment(int appointmentID) async{
+  http.Response response=await http.delete(Uri.parse("$backendURL/doctordashboard"),headers: {
+    "uname":usernameGlobal,
+    "pwd":passwordHashGlobal,
+    "user_type":userTypeGlobal,
+    "login_type":"user",
+  }, body: {
+    "appointmentId": appointmentID.toString()
+  }
+  );
+  if(response.statusCode!=200){
+    throw "Error";
+  }
+}
+
+Future<void> doctorEndAppointment(dynamic meds) async{
+  http.Response response=await http.post(Uri.parse("$backendURL/doctordashboard"),headers: {
+    "uname":usernameGlobal,
+    "pwd":passwordHashGlobal,
+    "user_type":userTypeGlobal,
+    "login_type":"user",
+  }, body: {
+    "meds":jsonEncode(meds)
+  });
+  if(response.statusCode!=200){
+    throw "Error";
+  }
+}

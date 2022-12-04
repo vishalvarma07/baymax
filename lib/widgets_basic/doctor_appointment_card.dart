@@ -7,11 +7,12 @@ class DoctorAppointmentCard extends StatefulWidget {
   final String reason;
   final bool upcomingAppointment;
   final VoidCallback? onAppointmentCancel;
+  final Function? endAppointment;
   final dynamic meds;
-  const DoctorAppointmentCard({Key? key, required this.appointmentText, required this.reason, this.upcomingAppointment=true, this.onAppointmentCancel,this.meds}) : super(key: key);
+  const DoctorAppointmentCard({Key? key, required this.appointmentText, required this.reason, this.upcomingAppointment=true, this.onAppointmentCancel,this.meds, this.endAppointment}) : super(key: key);
 
   @override
-  State<DoctorAppointmentCard> createState() => _DoctorAppointmentCardState(appointmentText, reason, upcomingAppointment, onAppointmentCancel, meds);
+  State<DoctorAppointmentCard> createState() => _DoctorAppointmentCardState(appointmentText, reason, upcomingAppointment, onAppointmentCancel, meds, endAppointment);
 }
 
 class _DoctorAppointmentCardState extends State<DoctorAppointmentCard> {
@@ -21,14 +22,15 @@ class _DoctorAppointmentCardState extends State<DoctorAppointmentCard> {
   final bool upcomingAppointment;
   final VoidCallback? onAppointmentCancel;
   final dynamic meds;
+  final Function? endAppointment;
 
-  _DoctorAppointmentCardState(this.appointmentText, this.reason, this.upcomingAppointment, this.onAppointmentCancel, this.meds);
+  _DoctorAppointmentCardState(this.appointmentText, this.reason, this.upcomingAppointment, this.onAppointmentCancel, this.meds, this.endAppointment);
 
 
   void initializeMedCounters(){
     if(!upcomingAppointment){
       for(int i=0;i<meds.length;i++){
-        meds['count']=0;
+        meds[i]['count']=0;
       }
     }
   }
@@ -50,7 +52,9 @@ class _DoctorAppointmentCardState extends State<DoctorAppointmentCard> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            onPressed: onAppointmentCancel,
+            onPressed: (){
+              onAppointmentCancel!();
+            },
             tooltip: "Cancel Appointment",
             icon: const Icon(Icons.cancel,color: Colors.red,),
           ),
@@ -105,7 +109,7 @@ class _DoctorAppointmentCardState extends State<DoctorAppointmentCard> {
             children: [
               FilledMaterialButton(
                 onPressed: (){
-
+                  endAppointment!(meds);
                 },
                 child: const Text("End Appointment",style: TextStyle(
                   color: Colors.white,

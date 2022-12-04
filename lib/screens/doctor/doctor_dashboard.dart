@@ -34,11 +34,27 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
             if(snapshot.data!['ongoing'].isNotEmpty)...[
               const PageSubheading(subheadingName: "Ongoing Appointment(s)"),
               for(int i=0;i<snapshot.data!['ongoing'].length;i++)
-                DoctorAppointmentCard(
-                  appointmentText: "Mr. ABC on 11/23/2022 1:00PM-2:00PM",
-                  reason: "Stomach Ache",
-                  upcomingAppointment: false,
-                ),
+                Builder(
+                  builder: (context){
+                    DateTime appointmentDate=DateTime.parse(snapshot.data!['ongoing'][i]['appointmentDate']);
+                    return DoctorAppointmentCard(
+                      appointmentText: "Appointment with ${snapshot.data!['ongoing'][i]['patientName']} on ${appointmentDate.month}/${appointmentDate.day}/${appointmentDate.year} ${snapshot.data!['ongoing'][i]['slotId']}:00-${snapshot.data!['ongoing'][i]['slotId']+1}:00",
+                      reason: snapshot.data!['ongoing'][i]['reason'],
+                      meds: snapshot.data!['meds'],
+                      endAppointment: (meds) async{
+                        try{
+                          await doctorEndAppointment(meds);
+                          if(!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Appointment ended successfully")));
+                          setState(() {});
+                        }catch(e){
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to end appointment")));
+                        }
+                      },
+                      upcomingAppointment: false,
+                    );
+                  },
+                )
             ],
 
             const SizedBox(
@@ -46,11 +62,26 @@ class _DoctorDashboardState extends State<DoctorDashboard> {
             ),
             if(snapshot.data!['upcoming'].isNotEmpty)...[
               const PageSubheading(subheadingName: "Upcoming Appointments"),
-              DoctorAppointmentCard(
-                appointmentText: "Mr. ABC on 11/23/2022 1:00PM-2:00PM",
-                reason: "Stomach Ache",
-                onAppointmentCancel: (){},
-              ),
+              for(int i=0;i<snapshot.data!['upcoming'].length;i++)
+                Builder(
+                  builder: (context){
+                    DateTime appointmentDate=DateTime.parse(snapshot.data!['upcoming'][i]['appointmentDate']);
+                    return DoctorAppointmentCard(
+                      appointmentText: "Appointment with ${snapshot.data!['upcoming'][i]['patientName']} on ${appointmentDate.month}/${appointmentDate.day}/${appointmentDate.year} ${snapshot.data!['upcoming'][i]['slotId']}:00-${snapshot.data!['upcoming'][i]['slotId']+1}:00",
+                      reason: snapshot.data!['upcoming'][i]['reason'],
+                      onAppointmentCancel: () async{
+                        try{
+                          await cancelAppointment(snapshot.data!['upcoming'][i]['appointmentId']);
+                          if(!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Appointment Cancelled Successfully")));
+                          setState(() {});
+                        }catch(e){
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to cancel appointment")));
+                        }
+                      },
+                    );
+                  }
+                ),
             ]
           ],
         );

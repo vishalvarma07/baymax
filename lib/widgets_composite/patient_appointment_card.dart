@@ -51,7 +51,7 @@ class PatientAppointmentCard extends StatelessWidget {
                   context: context,
                   builder: (context)=>AlertDialog(
                     title: const Text("Appointment Info"),
-                    content: Text("Reason: $reason}"),
+                    content: Text("Reason: $reason"),
                     actions: [
                       TextButton(
                         onPressed: () async{
