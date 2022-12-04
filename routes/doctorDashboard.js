@@ -60,7 +60,7 @@ router.get('/', credentialCheck, (req, res) => {
 })
 
 router.post('/', credentialCheck, (req, res) => {
-    const info = req.body;
+    const info = JSON.parse(req.body);
     //info.appointmentDate = String(info.appointmentDate);
     //const uid = getDoctorid().id;
     let details = {}
@@ -100,16 +100,16 @@ router.post('/', credentialCheck, (req, res) => {
                                     }
                                     else{
                                         pool.query('select id, appointmentId from payment where doctorId = ? and appointmentId = ?',[rows[0].doctorId, rows[0].appointmentId], function(err, rows, fields){
-                                            for(let i=0; i< info.meds.length;i++){
-                                                pool.query('INSERT INTO MEDORDER (medicineId, paymentId, medOrderedQuantity, orderDate) VALUES (?,?, ?, ?)',[info.meds[i].id, rows[0].id, info.meds[i].count, appointmentDate], function(err){
-                                                    if(err){
-                                                        console.log(err);
-                                                        details.status = 'failed';
-                                                        res.status(401).json(details);
-                                                        return;
-                                                    }
-                                                    else{
-                                                        pool.query(`update medicines set mQuantity = mQuantity - ${info.meds[i].count} where id = ${info.meds[i].id}`, function(err) {
+                                            if(err){
+                                                console.log(err);
+                                                details.status = 'failed';
+                                                res.status(404).json(details);
+                                                return;
+                                            }
+                                            else{
+                                                if(info.meds.length != 0){
+                                                    for(let i=0; i< info.meds.length;i++){
+                                                        pool.query('INSERT INTO MEDORDER (medicineId, paymentId, medOrderedQuantity, orderDate) VALUES (?,?, ?, ?)',[info.meds[i].id, rows[0].id, info.meds[i].count, appointmentDate], function(err){
                                                             if(err){
                                                                 console.log(err);
                                                                 details.status = 'failed';
@@ -117,16 +117,31 @@ router.post('/', credentialCheck, (req, res) => {
                                                                 return;
                                                             }
                                                             else{
-                                                                if(i == info.meds.length-1){
-                                                                    details.status = 'successful';
-                                                                    res.status(200).json(details);
-                                                                    return;
-                                                                }
+                                                                pool.query(`update medicines set mQuantity = mQuantity - ${info.meds[i].count} where id = ${info.meds[i].id}`, function(err) {
+                                                                    if(err){
+                                                                        console.log(err);
+                                                                        details.status = 'failed';
+                                                                        res.status(401).json(details);
+                                                                        return;
+                                                                    }
+                                                                    else{
+                                                                        if(i == info.meds.length-1){
+                                                                            details.status = 'successful';
+                                                                            res.status(200).json(details);
+                                                                            return;
+                                                                        }
+                                                                    }
+                                                                })
                                                             }
                                                         })
                                                     }
-                                                })
-                                            }
+                                                }
+                                                else{
+                                                    details.status = 'successful';
+                                                    res.status(200).json(details);
+                                                    return;
+                                                }
+                                            }   
                                         })
                                     }
                                 })
