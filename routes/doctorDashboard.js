@@ -6,7 +6,6 @@ let credentialCheck = require('../services/credentialCheck');
 
 router.get('/', credentialCheck, (req, res) => {
     let dashboardDetails = {};
-    console.log(req.headers.uname);
     pool.query('select * from doctor where uname = ?',[req.headers.uname], function(err, rows, fields) {
         if(err){
             console.log(err);
