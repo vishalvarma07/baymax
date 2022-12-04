@@ -118,11 +118,17 @@ router.post('/', credentialCheck, (req, res) => {
 router.delete('/', credentialCheck, (req, res) => {
     let info = req.body;
     let details = {}
-    pool.query('delete from table reservations where id = ?',[info.appointmentId], function(err) {
+    pool.query('delete from reservations where appointmentId = ?',[info.appointmentId], function(err) {
         if(err){
             console.log(err);
             details.status = 'failed';
             res.status(404).json(details);
+            return;
+        }
+        else{
+            details.status = 'successful';
+            res.status(200).json(details);
+            return;
         }
     })
 })
