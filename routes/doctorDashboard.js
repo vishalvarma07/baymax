@@ -60,11 +60,9 @@ router.get('/', credentialCheck, (req, res) => {
 })
 
 router.post('/', credentialCheck, (req, res) => {
-    const info = JSON.parse(req.body);
-    //info.appointmentDate = String(info.appointmentDate);
-    //const uid = getDoctorid().id;
+    const info = (req.body);
+    info.meds = JSON.parse(info.meds);
     let details = {}
-    //console.log(uid);
     pool.query('select * from doctor where uname = ?',[req.headers.uname], function(err, rows, fields){
         if(err){
             console.log(err);
