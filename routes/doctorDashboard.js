@@ -15,9 +15,10 @@ router.get('/', credentialCheck, (req, res) => {
         }
         dashboardDetails.dName = rows[0].fName,
         dashboardDetails.rating = rows[0].rating;
+        let doctorId = rows[0].id;
         dashboardDetails.ongoing = []
         dashboardDetails.meds = []
-        pool.query('select * from ongoingAppointments where doctorId = ?',[rows[0].id], function(err, rows, fields) {
+        pool.query('select * from ongoingAppointments where doctorId = ?',[doctorId], function(err, rows, fields) {
             if(err){
                 console.log(err);
                 dashboardDetails.status = 'failed';
@@ -39,14 +40,16 @@ router.get('/', credentialCheck, (req, res) => {
                     return;
                 }
                 else{
+                    console.log(rows[0].id);
                     dashboardDetails.meds = rows;
-                    pool.query('select * from upcomingappointments where doctorId = ?',[rows[0].id], function(err, rows, fields){
+                    pool.query('select * from upcomingappointments where doctorId = ?',[doctorId], function(err, rows, fields){
                         if(err){
                             dashboardDetails.status = 'failed';
                             res.status(404).json(dashboardDetails);
                             return;
                         }
                         else{
+                            console.log(rows);
                             dashboardDetails.upcoming = rows;
                             dashboardDetails.status = 'successful';
                             res.status(200).json(dashboardDetails);
@@ -60,6 +63,7 @@ router.get('/', credentialCheck, (req, res) => {
 
 router.post('/', credentialCheck, (req, res) => {
     const info = req.body;
+    //info.appointmentDate = String(info.appointmentDate);
     //const uid = getDoctorid().id;
     let details = {}
     //console.log(uid);
@@ -68,50 +72,69 @@ router.post('/', credentialCheck, (req, res) => {
             console.log(err);
             details.status = 'failed';
             res.status(404).json(details);
+            return;
         }
-        pool.query('select * from ongoingAppointments where id = ?',[rows[0].id], function(err, rows, fields) {
-            if(err){
-                console.log(err);
-                details.status = 'failed';
-                res.status(401).json(details);
-            }
-            if(rows.length != 0){
-                pool.query(`INSERT INTO PAYMENT (doctorId,appointmentId,appointmentDate,consultationFee,slotId,payStatus) VALUES (${rows[0].doctorId}, ${rows[0].appointmentId}, ${rows[0].price}, ${rows[0].slotId}, ${0})`, function(err) {
-                    if(err){
-                        console.log(err);
-                        details.status = 'failed';
-                        res.status(401).json(details);
-                    }
-                    pool.query('delete from reservation where appointmentId = ?',[rows[0].appointmentId], function(err) {
-                        if(err){
-                            console.log(err);
-                            details.status = 'failed';
-                            res.status(401).json(details);
-                        }
-                        pool.query('select id, appointmentId from payment where doctorId = ? and appointmentId = ?',[rows[0].doctorId, rows[0].appointmentId], function(err, rows, fields){
-                            for(let i=0; i< info.meds.length;i++){
-                                pool.query(`INSERT INTO MEDORDER (medicineId, paymentId, medOrderedQuantity, orderDate) VALUES (${info.meds[i].id},${rows[0].id}, ${info.meds[i].quantity}, ${rows[0].appointmentId})`, function(err){
+        else{
+            pool.query('select * from ongoingAppointments where doctorId = ?',[rows[0].id], function(err, rows, fields) {
+                if(err){
+                    console.log(err);
+                    details.status = 'failed';
+                    res.status(401).json(details);
+                    return;
+                }
+                else{
+                    if(rows.length != 0){
+                        pool.query('INSERT INTO PAYMENT (doctorId,appointmentId,appointmentDate,consultationFee,slotId,payStatus) VALUES (?, ?, ?, 50, ?, 0)',[rows[0].doctorId, rows[0].appointmentId, info.appointmentDate, rows[0].slotId], function(err) {
+                            if(err){
+                                console.log(err);
+                                details.status = 'failed';
+                                res.status(401).json(details);
+                                return;
+                            }
+                            else{
+                                pool.query('delete from reservations where appointmentId = ?',[rows[0].appointmentId], function(err) {
                                     if(err){
                                         console.log(err);
                                         details.status = 'failed';
                                         res.status(401).json(details);
+                                        return;
                                     }
-                                    pool.query(`update medicines set mQuantity = mQuantity - ${info.meds[i].quantity} where id = ${info.meds[i].id}`, function(err) {
-                                        if(err){
-                                            console.log(err);
-                                            details.status = 'failed';
-                                            res.status(401).json(details);
-                                        }
-                                        details.status = 'successful';
-                                        res.status(200).json(details);
-                                    })
+                                    else{
+                                        pool.query('select id, appointmentId from payment where doctorId = ? and appointmentId = ?',[rows[0].doctorId, rows[0].appointmentId], function(err, rows, fields){
+                                            for(let i=0; i< info.meds.length;i++){
+                                                pool.query('INSERT INTO MEDORDER (medicineId, paymentId, medOrderedQuantity, orderDate) VALUES (?,?, ?, ?)',[info.meds[i].id, rows[0].id, info.meds[i].quantity, info.appointmentDate], function(err){
+                                                    if(err){
+                                                        console.log(err);
+                                                        details.status = 'failed';
+                                                        res.status(401).json(details);
+                                                        return;
+                                                    }
+                                                    else{
+                                                        pool.query(`update medicines set mQuantity = mQuantity - ${info.meds[i].quantity} where id = ${info.meds[i].id}`, function(err) {
+                                                            if(err){
+                                                                console.log(err);
+                                                                details.status = 'failed';
+                                                                res.status(401).json(details);
+                                                                return;
+                                                            }
+                                                            else{
+                                                                details.status = 'successful';
+                                                                res.status(200).json(details);
+                                                                return;
+                                                            }
+                                                        })
+                                                    }
+                                                })
+                                            }
+                                        })
+                                    }
                                 })
                             }
                         })
-                    })
-                })
-            }
-        })
+                    }
+                }
+            })
+        }
     }) 
 })
 
