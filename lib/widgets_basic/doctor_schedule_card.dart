@@ -24,7 +24,9 @@ class DoctorScheduleCard extends StatelessWidget {
               half: const Icon(Icons.star_half,color: backgroundColor,),
               full: const Icon(Icons.star,color: backgroundColor,),
             ),
+            initialRating: rating,
             ignoreGestures: true,
+            allowHalfRating: true,
             onRatingUpdate: (value){
 
             },

@@ -53,6 +53,7 @@ class _PatientReserveAppointmentState extends State<PatientReserveAppointment> {
                             if(!mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Appointment Reservation successful")));
                             Navigator.pop(context);
+                            setState(() {});
 
                           }catch(e){
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to reserve appointment")));
