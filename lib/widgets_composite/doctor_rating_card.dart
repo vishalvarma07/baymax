@@ -25,7 +25,7 @@ class DoctorRatingCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Flexible(
-                child: Text("Your consultation is rated at $rating out of 5",style: const TextStyle(
+                child: Text("Your consultation is rated $rating out of 5",style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w300,
                     color: Colors.white
